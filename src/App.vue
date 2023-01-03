@@ -1,10 +1,64 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <p v-if="error">{{ error }}</p>
+  <p>{{ result.heroStats.matchUp }}</p>
+  <div></div>
 </template>
+
+<script>
+import gql from "graphql-tag";
+import { useQuery } from "@vue/apollo-composable";
+
+/*
+const CHARACTERS_QUERY = gql`
+  query Characters {
+    characters {
+      results {
+        id
+        name
+        image
+      }
+    }
+  }
+`;
+*/
+/*
+  <p>{{ result.heroStats.matchUp }}</p>
+  <p v-else v-for="hero in result.heroStats.matchUp" :key="hero.heroId2">
+    {{ hero.heroId2 }}
+  </p>
+*/
+
+const CHARACTERS_QUERY = gql`
+  {
+    heroStats {
+      matchUp(heroId: 14, week: 1670803200, take: 123) {
+        vs {
+          heroId1
+          heroId2
+          week
+          matchCount
+          winCount
+          winRateHeroId1
+          winRateHeroId2
+          winsAverage
+        }
+      }
+    }
+  }
+`;
+
+export default {
+  name: "App",
+  setup() {
+    const { result, loading, error } = useQuery(CHARACTERS_QUERY);
+    return {
+      result,
+      loading,
+      error,
+    };
+  },
+};
+</script>
 
 <style>
 #app {
@@ -13,18 +67,6 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
+  margin-top: 60px;
 }
 </style>
