@@ -1,32 +1,17 @@
 <template>
   <p v-if="error">{{ error }}</p>
-  <p>{{ result.heroStats.matchUp }}</p>
+
+  <p v-else v-for="matchUp in result.heroStats.matchUp" :key="matchUp.vs">
+    <p v-for="match in matchUp.vs" :key="match.heroId2">
+    {{ match.heroId2 }}
+    </p>
+  </p>
   <div></div>
 </template>
 
 <script>
 import gql from "graphql-tag";
 import { useQuery } from "@vue/apollo-composable";
-
-/*
-const CHARACTERS_QUERY = gql`
-  query Characters {
-    characters {
-      results {
-        id
-        name
-        image
-      }
-    }
-  }
-`;
-*/
-/*
-  <p>{{ result.heroStats.matchUp }}</p>
-  <p v-else v-for="hero in result.heroStats.matchUp" :key="hero.heroId2">
-    {{ hero.heroId2 }}
-  </p>
-*/
 
 const CHARACTERS_QUERY = gql`
   {
@@ -46,6 +31,25 @@ const CHARACTERS_QUERY = gql`
     }
   }
 `;
+/*
+const CHARACTERS_QUERY = gql`
+  query Characters {
+    characters {
+      results {
+        id
+        name
+        image
+      }
+    }
+  }
+`;
+*/
+/*
+  <p>{{ result.heroStats.matchUp }}</p>
+  <p v-else v-for="hero in result.heroStats.matchUp" :key="hero">
+    {{ hero.vs }}
+  </p>
+*/
 
 export default {
   name: "App",
