@@ -8,7 +8,7 @@
   >
     {{ hero.heroId }}
     <div class="hero-image heroPick-image">
-      <img :src="heroImage" />
+      <a href="#"><img :src="heroImage" /> </a>
     </div>
   </div>
 
@@ -43,6 +43,11 @@ export default {
       result,
       loading,
       error,
+    };
+  },
+  data() {
+    return {
+      heroImage: "G://IT/GIT/GraphQl/krobelus/src/assets/hero_img/135.png",
     };
   },
 };

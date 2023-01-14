@@ -3,7 +3,7 @@ import { DefaultApolloClient } from '@vue/apollo-composable'
 import App from './App.vue'
 import router from "./router";
 import store from "./store";
-import apolloClient from '@/services/ApolloClientGraphQL.js'
+import apolloClient from '@/api/ApolloClientGraphQL.js'
 
 const app = createApp({
   setup () {
