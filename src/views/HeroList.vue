@@ -1,5 +1,33 @@
 <template>
-  <p v-if="error">{{ error }}</p>
+  <div class="heroes">
+    <div
+      class="hero heroPick"
+      v-for="hero in result.heroStats.stats"
+      :key="hero.heroId"
+    >
+      <HeroAvatar :heroId="hero.heroId" />
+    </div>
+  </div>
+</template>
+
+<script>
+import gql from "graphql-tag";
+import { useQuery } from "@vue/apollo-composable";
+import HeroAvatar from "@/components/HeroAvatar.vue";
+
+const CHARACTERS_QUERY = gql`
+  {
+    heroStats {
+      stats {
+        heroId
+      }
+    }
+  }
+`;
+/*
+  <HeroAvatar v-for="hero in heroes" :key="hero.id" />
+
+    <p v-if="error">{{ error }}</p>
 
   <div
     class="hero heroPick"
@@ -13,22 +41,11 @@
   </div>
 
   <div></div>
-</template>
 
-<script>
-import gql from "graphql-tag";
-import { useQuery } from "@vue/apollo-composable";
 
-const CHARACTERS_QUERY = gql`
-  {
-    heroStats {
-      stats {
-        heroId
-      }
-    }
-  }
-`;
-/*
+
+  <a href="#"><img :src="heroImage" /> </a>
+
   <p>{{ result.heroStats.matchUp }}</p>
   <p v-else v-for="hero in result.heroStats.matchUp" :key="hero">
     {{ hero.vs }}
@@ -37,6 +54,9 @@ const CHARACTERS_QUERY = gql`
 
 export default {
   name: "HeroList",
+  components: {
+    HeroAvatar,
+  },
   setup() {
     const { result, loading, error } = useQuery(CHARACTERS_QUERY);
     return {
@@ -47,9 +67,11 @@ export default {
   },
   data() {
     return {
-      heroImage: "G://IT/GIT/GraphQl/krobelus/src/assets/hero_img/135.png",
+      heroImage:
+        "https://raw.githubusercontent.com/AdamchukVladimir/krobelus/master/src/assets/hero_img/135.png",
     };
   },
+  created() {},
 };
 </script>
 
