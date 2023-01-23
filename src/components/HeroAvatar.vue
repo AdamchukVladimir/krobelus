@@ -2,10 +2,8 @@
   <form>
     <div class="hero-image heroPick-image">
       <a href="#"><img :src="heroImage" /> </a>
-      <p>{{ heroId }}</p>
     </div>
   </form>
-  <p>test2</p>
 </template>
 <script>
 export default {
@@ -25,3 +23,8 @@ export default {
   },
 };
 </script>
+<style>
+.heroPick-image img {
+  width: 50px;
+}
+</style>
