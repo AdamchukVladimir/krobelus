@@ -1,12 +1,12 @@
 <template>
   <div class="wrapper">
     <div class="heroes enemyPick">
-      <EnemyPick v-on:click="count += 1" :enemyId="count" />
+      <EnemyPick :enemyId="count" v-on:click="count += 1" />
       {{ count }}
       <EnemyPick :enemyId="2" />
-      <EnemyPick :enemyId="3" />
-      <EnemyPick :enemyId="4" />
-      <EnemyPick :enemyId="5" />
+      <EnemyPick :enemyId="0" />
+      <EnemyPick :enemyId="0" />
+      <EnemyPick :enemyId="0" />
     </div>
     <div class="heroes heroesPull">
       <div class="hero str">
@@ -52,61 +52,6 @@ const CHARACTERS_QUERY = gql`
     }
   }
 `;
-/*
-<div class="enemyPick">
-    <EnemyPick />
-  </div>
-
-<template>
-  <div class="heroes">
-    <div
-      class="hero heroPick"
-      v-for="hero in result.constants.heroes"
-      :key="hero.id"
-    >
-      <div :class="hero.stats.primaryAttribute">
-        <HeroAvatar :heroId="hero.id" />
-      </div>
-    </div>
-  </div>
-</template>
-
-      <p>{{ hero.stats.primaryAttribute }}</p>
-
-  {
-    heroStats {
-      stats {
-        heroId
-      }
-    }
-  }
-
-  <HeroAvatar v-for="hero in heroes" :key="hero.id" />
-
-    <p v-if="error">{{ error }}</p>
-
-  <div
-    class="hero heroPick"
-    v-for="hero in result.heroStats.stats"
-    :key="hero.heroId"
-  >
-    {{ hero.heroId }}
-    <div class="hero-image heroPick-image">
-      <a href="#"><img :src="heroImage" /> </a>
-    </div>
-  </div>
-
-  <div></div>
-
-
-
-  <a href="#"><img :src="heroImage" /> </a>
-
-  <p>{{ result.heroStats.matchUp }}</p>
-  <p v-else v-for="hero in result.heroStats.matchUp" :key="hero">
-    {{ hero.vs }}
-  </p>
-*/
 
 export default {
   name: "HeroList",
@@ -126,7 +71,7 @@ export default {
     return {
       heroImage:
         "https://raw.githubusercontent.com/AdamchukVladimir/krobelus/master/src/assets/hero_img/135.png",
-      count: 1,
+      count: 0,
     };
   },
   created() {},
