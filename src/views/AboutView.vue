@@ -1,7 +1,6 @@
 <template>
   <div class="about">
     <h1>This is an about page</h1>
-    <EnemyPick />
   </div>
 </template>
 
@@ -11,16 +10,6 @@ import HelloWorld from "@/components/HelloWorld.vue";
 import EnemyPick from "@/components/EnemyPick.vue";
 
 export default {
-  components: {
-    EnemyPick,
-  },
+  components: {},
 };
-/*
-export default {
-  name: "EnemyPick",
-  components: {
-    EnemyPick,
-  },
-};
-*/
 </script>

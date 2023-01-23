@@ -69,8 +69,6 @@ export default {
   },
   data() {
     return {
-      heroImage:
-        "https://raw.githubusercontent.com/AdamchukVladimir/krobelus/master/src/assets/hero_img/135.png",
       count: 0,
     };
   },
@@ -79,14 +77,6 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 .enemyPick {
   grid-area: enemyPick;
 }
