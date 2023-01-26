@@ -1,7 +1,9 @@
 <template>
   <form>
     <div class="hero-image heroPick-image">
-      <a href="#"><img :src="heroImage" /> </a>
+      <a v-on:click="$emit('eHeroPick', this.heroId)"
+        ><img :src="heroImage" />
+      </a>
     </div>
   </form>
 </template>

@@ -2,10 +2,15 @@
   <form>
     <div class="heroes enemyPick">
       <div class="enemyHero enemyHero1">
-        <a v-on:click="counter += 1"
-          ><img class="hero-image enemyPick-image" :src="heroImage1" />
+        <a v-on:click="enemyChange()"
+          ><img class="hero-image enemyPick-image" :src="enemyHeroImage" />
         </a>
-        test1 {{ counter }}
+        enemyId {{ enemyId }} <br />
+        enemyObject {{ enemyObject }}<br />
+        flag
+        {{ EnemyFlag }}
+        counter
+        {{ counter }}
       </div>
     </div>
   </form>
@@ -15,16 +20,30 @@ export default {
   name: "EnemyPick",
   props: {
     enemyId: {
+      type: Number,
+      required: true,
+    },
+    enemyObject: {
       type: Object,
       required: true,
     },
   },
+  computed: {
+    enemyHeroImage() {
+      if (this.EnemyFlag) {
+        this.enemyObject = 2;
+      }
+      return `https://raw.githubusercontent.com/AdamchukVladimir/krobelus/master/src/assets/hero_img/${this.enemyObject}.png`;
+    },
+  },
+  methods: {
+    enemyChange() {
+      this.EnemyFlag = !this.EnemyFlag;
+    },
+  },
   data() {
     return {
-      heroImage1:
-        "https://raw.githubusercontent.com/AdamchukVladimir/krobelus/master/src/assets/hero_img/" +
-        this.enemyId +
-        ".png",
+      EnemyFlag: false,
       counter: 0,
     };
   },

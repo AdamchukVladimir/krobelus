@@ -1,32 +1,32 @@
 <template>
   <div class="wrapper">
     <div class="heroes enemyPick">
-      <EnemyPick :enemyId="count" v-on:click="count += 1" />
+      <EnemyPick :enemyObject="count" :enemyId="1" v-on:click="count += 1" />
       {{ count }}
-      <EnemyPick :enemyId="2" />
-      <EnemyPick :enemyId="0" />
-      <EnemyPick :enemyId="0" />
-      <EnemyPick :enemyId="0" />
+      <EnemyPick :enemyObject="2" :enemyId="2" />
+      <EnemyPick :enemyObject="0" :enemyId="3" />
+      <EnemyPick :enemyObject="0" :enemyId="4" />
+      <EnemyPick :enemyObject="0" :enemyId="5" />
     </div>
     <div class="heroes heroesPull">
       <div class="hero str">
         <template v-for="hero in result.constants.heroes" :key="hero.id">
           <div class="heroPick" v-if="hero.stats.primaryAttribute == 'str'">
-            <HeroAvatar :heroId="hero.id" />
+            <HeroAvatar @eHeroPick="getHeroId" :heroId="hero.id" />
           </div>
         </template>
       </div>
       <div class="hero agi">
         <template v-for="hero in result.constants.heroes" :key="hero.id">
           <div class="heroPick" v-if="hero.stats.primaryAttribute == 'agi'">
-            <HeroAvatar :heroId="hero.id" />
+            <HeroAvatar @eHeroPick="getHeroId" :heroId="hero.id" />
           </div>
         </template>
       </div>
       <div class="hero int">
         <template v-for="hero in result.constants.heroes" :key="hero.id">
           <div class="heroPick" v-if="hero.stats.primaryAttribute == 'int'">
-            <HeroAvatar :heroId="hero.id" />
+            <HeroAvatar @eHeroPick="getHeroId" :heroId="hero.id" />
           </div>
         </template>
       </div>
@@ -72,7 +72,12 @@ export default {
       count: 0,
     };
   },
-  created() {},
+  methods: {
+    getHeroId(id) {
+      console.log(id);
+      this.count = id;
+    },
+  },
 };
 </script>
 
