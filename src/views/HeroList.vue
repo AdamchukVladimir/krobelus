@@ -1,12 +1,33 @@
 <template>
   <div class="wrapper">
     <div class="heroes enemyPick">
-      <EnemyPick :enemyObject="count" :enemyId="1" v-on:click="count += 1" />
-      {{ count }}
-      <EnemyPick :enemyObject="2" :enemyId="2" />
-      <EnemyPick :enemyObject="0" :enemyId="3" />
-      <EnemyPick :enemyObject="0" :enemyId="4" />
-      <EnemyPick :enemyObject="0" :enemyId="5" />
+      <EnemyPick
+        @getEnemy="getEnemyParams"
+        :enemyObject="enemy1heroId"
+        :enemyId="1"
+      />
+      <EnemyPick
+        @getEnemy="getEnemyParams"
+        :enemyObject="enemy2heroId"
+        :enemyId="2"
+      />
+      currentenemy
+      {{ currentEnemy }}
+      <EnemyPick
+        @getEnemy="getEnemyParams"
+        :enemyObject="enemy3heroId"
+        :enemyId="3"
+      />
+      <EnemyPick
+        @getEnemy="getEnemyParams"
+        :enemyObject="enemy4heroId"
+        :enemyId="4"
+      />
+      <EnemyPick
+        @getEnemy="getEnemyParams"
+        :enemyObject="enemy5heroId"
+        :enemyId="5"
+      />
     </div>
     <div class="heroes heroesPull">
       <div class="hero str">
@@ -69,13 +90,45 @@ export default {
   },
   data() {
     return {
-      count: 0,
+      enemy1heroId: 0,
+      enemy2heroId: 0,
+      enemy3heroId: 0,
+      enemy4heroId: 0,
+      enemy5heroId: 0,
+      currentEnemy: 0,
     };
+  },
+  computed: {
+    mainResult() {
+      var mainResult = this.result;
+      return mainResult;
+    },
   },
   methods: {
     getHeroId(id) {
       console.log(id);
-      this.count = id;
+      console.log(this.result.constants.heroes);
+      console.log("mainResult " + this.mainResult);
+      /*
+      for (var i = 0; i < this.result.constants.heroes.length; i++) {
+        console.log("106 " + this.result.constants.heroes[i].id);
+        if (this.result.constants.heroes[i].id == id) {
+          console.log("108 ");
+          this.result.constants.heroes[i].id = 2;
+        }
+      }
+      */
+      if (this.currentEnemy == 1) this.enemy1heroId = id;
+      if (this.currentEnemy == 2) this.enemy2heroId = id;
+      if (this.currentEnemy == 3) this.enemy3heroId = id;
+      if (this.currentEnemy == 4) this.enemy4heroId = id;
+      if (this.currentEnemy == 5) this.enemy5heroId = id;
+      //if (id) this.result.constants.heroes.id = 2;
+      //if (id) console.log("test111");
+    },
+    getEnemyParams(enemyId) {
+      console.log("Enemy id " + enemyId);
+      this.currentEnemy = enemyId;
     },
   },
 };

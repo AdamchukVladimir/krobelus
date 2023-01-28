@@ -30,15 +30,18 @@ export default {
   },
   computed: {
     enemyHeroImage() {
-      if (this.EnemyFlag) {
-        this.enemyObject = 2;
-      }
+      // if (this.EnemyFlag) {
+      //   this.enemyObject = 2;
+      // }
       return `https://raw.githubusercontent.com/AdamchukVladimir/krobelus/master/src/assets/hero_img/${this.enemyObject}.png`;
     },
   },
   methods: {
     enemyChange() {
       this.EnemyFlag = !this.EnemyFlag;
+      //if (this.EnemyFlag) {
+      this.$emit("getEnemy", this.enemyId);
+      //}
     },
   },
   data() {
