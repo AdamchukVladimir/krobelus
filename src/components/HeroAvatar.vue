@@ -1,16 +1,23 @@
 <template>
   <form>
     <div class="hero-image heroPick-image">
-      <a v-on:click="$emit('eHeroPick', this.heroId)"
+      <a v-on:click="$emit('eHeroPick', this.heroObj.id)"
         ><img :src="heroImage" />
       </a>
+      imgId
+      {{ this.heroObj.imgId }}
+      <a v-on:click="$emit('eHeroPick', this.heroObj.id)"
+        ><img :src="heroImage1" />
+      </a>
+      id
+      {{ this.heroObj.id }}
     </div>
   </form>
 </template>
 <script>
 export default {
   props: {
-    heroId: {
+    heroObj: {
       type: Object,
       required: true,
     },
@@ -19,7 +26,11 @@ export default {
     return {
       heroImage:
         "https://raw.githubusercontent.com/AdamchukVladimir/krobelus/master/src/assets/hero_img/" +
-        this.heroId +
+        this.heroObj.imgId +
+        ".png",
+      heroImage1:
+        "https://raw.githubusercontent.com/AdamchukVladimir/krobelus/master/src/assets/hero_img/" +
+        this.heroObj.id +
         ".png",
     };
   },
