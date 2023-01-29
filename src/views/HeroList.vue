@@ -100,24 +100,65 @@ export default {
   },
   computed: {
     mainResult() {
-      var mainResult = this.result;
-      return mainResult;
+      //var oMainResult1 = this.result;
+      var oMainResult = {
+        heroes: [
+          {
+            id: 0,
+            primaryAttribute: "",
+          },
+        ],
+      };
+      //var oMainResult1 = Object.assign({}, this.result);
+
+      for (var i = 0; i < this.result.constants.heroes.length; i++) {
+        //oMainResult.heroes[i].id = this.result.constants.heroes[i].id;
+        //oMainResult.heroes[i].primaryAttribute =
+        //  this.result.constants.heroes[i].stats.primaryAttribute;
+        oMainResult.heroes.push({
+          id: this.result.constants.heroes[i].id,
+          primaryAttribute:
+            this.result.constants.heroes[i].stats.primaryAttribute,
+        });
+      }
+      /*
+      var oMainResult1 = {};
+      for (let key in this.result) {
+        oMainResult1[key] = this.result[key];
+      }
+      */
+      /*
+      var oMainResult = Object.defineProperties(oMainResult1, "constants", {
+        enumerable: true,
+        configurable: true,
+        writable: true,
+      });
+      */
+      //console.log("114");
+      //console.log(JSON.stringify(oMainResult, null, 2));
+      //console.log(JSON.stringify(oMainResult1, null, 2));
+      return oMainResult;
     },
   },
   methods: {
     getHeroId(id) {
       console.log(id);
-      console.log(this.result.constants.heroes);
-      console.log("mainResult " + this.mainResult);
-      /*
-      for (var i = 0; i < this.result.constants.heroes.length; i++) {
-        console.log("106 " + this.result.constants.heroes[i].id);
-        if (this.result.constants.heroes[i].id == id) {
-          console.log("108 ");
-          this.result.constants.heroes[i].id = 2;
+      //console.log(this.mainResult.a);
+      //this.mainResult.a = 4;
+      //console.log(this.mainResult.a);
+      //console.log(this.result.constants.heroes);
+      //console.log("mainResult " + this.mainResult);
+      //console.log("this.result.writable " + this.result);
+
+      for (var i = 0; i < this.mainResult.heroes.length; i++) {
+        console.log("106 " + this.mainResult.heroes[i].id);
+        if (this.mainResult.heroes[i].id == id) {
+          this.mainResult.heroes[i].id = 4;
+          console.log("108 " + this.mainResult.heroes[i].id);
         }
       }
-      */
+
+      console.log("mainResult " + this.mainResult);
       if (this.currentEnemy == 1) this.enemy1heroId = id;
       if (this.currentEnemy == 2) this.enemy2heroId = id;
       if (this.currentEnemy == 3) this.enemy3heroId = id;
