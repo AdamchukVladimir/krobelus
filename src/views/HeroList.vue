@@ -31,22 +31,21 @@
     </div>
     <div class="heroes heroesPull">
       <div class="hero str">
-        <template v-for="hero in mainResult.heroes" :key="hero.id">
+        <template v-for="hero in mainResult.heroes" :key="hero.activity">
           <div class="heroPick" v-if="hero.primaryAttribute == 'str'">
             <HeroAvatar @eHeroPick="getHeroId" :heroObj="hero" />
-            Main {{ hero.id }} img {{ hero.imgId }}
           </div>
         </template>
       </div>
       <div class="hero agi">
-        <template v-for="hero in mainResult.heroes" :key="hero.id">
+        <template v-for="hero in mainResult.heroes" :key="hero.activity">
           <div class="heroPick" v-if="hero.primaryAttribute == 'agi'">
             <HeroAvatar @eHeroPick="getHeroId" :heroObj="hero" />
           </div>
         </template>
       </div>
       <div class="hero int">
-        <template v-for="hero in mainResult.heroes" :key="hero.id">
+        <template v-for="hero in mainResult.heroes" :key="hero.activity">
           <div class="heroPick" v-if="hero.primaryAttribute == 'int'">
             <HeroAvatar @eHeroPick="getHeroId" :heroObj="hero" />
           </div>
@@ -107,6 +106,7 @@ export default {
             id: 0,
             primaryAttribute: "",
             imgId: 0,
+            activity: "",
           },
         ],
       };
@@ -115,28 +115,27 @@ export default {
           id: this.result.constants.heroes[i].id,
           primaryAttribute:
             this.result.constants.heroes[i].stats.primaryAttribute,
-          imgId: 0,
+          imgId: this.result.constants.heroes[i].id,
+          activity: "active",
         });
       }
       return oMainResult;
     },
   },
   methods: {
-    getHeroId(id) {
+    getHeroId(avatarObj) {
+      if (avatarObj.activity == "active") {
+        if (this.currentEnemy == 1) this.enemy1heroId = avatarObj.id;
+        if (this.currentEnemy == 2) this.enemy2heroId = avatarObj.id;
+        if (this.currentEnemy == 3) this.enemy3heroId = avatarObj.id;
+        if (this.currentEnemy == 4) this.enemy4heroId = avatarObj.id;
+        if (this.currentEnemy == 5) this.enemy5heroId = avatarObj.id;
+      }
       for (var i = 0; i < this.mainResult.heroes.length; i++) {
-        if (this.mainResult.heroes[i].id == id) {
-          this.mainResult.heroes[i].imgId = 4;
-          this.mainResult.heroes[i].id = 4;
-          console.log("108 " + this.mainResult.heroes[i].id);
-          console.log("108 " + this.mainResult.heroes[i].imgId);
+        if (this.mainResult.heroes[i].id == avatarObj.id) {
+          this.mainResult.heroes[i].activity = "inactive";
         }
       }
-
-      if (this.currentEnemy == 1) this.enemy1heroId = id;
-      if (this.currentEnemy == 2) this.enemy2heroId = id;
-      if (this.currentEnemy == 3) this.enemy3heroId = id;
-      if (this.currentEnemy == 4) this.enemy4heroId = id;
-      if (this.currentEnemy == 5) this.enemy5heroId = id;
     },
     getEnemyParams(enemyId) {
       console.log("Enemy id " + enemyId);

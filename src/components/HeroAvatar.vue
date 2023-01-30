@@ -1,16 +1,9 @@
 <template>
   <form>
     <div class="hero-image heroPick-image">
-      <a v-on:click="$emit('eHeroPick', this.heroObj.id)"
-        ><img :src="heroImage" />
+      <a v-on:click="$emit('eHeroPick', this.heroObj)"
+        ><img :class="this.heroObj.activity" :src="heroImage" />
       </a>
-      imgId
-      {{ this.heroObj.imgId }}
-      <a v-on:click="$emit('eHeroPick', this.heroObj.id)"
-        ><img :src="heroImage1" />
-      </a>
-      id
-      {{ this.heroObj.id }}
     </div>
   </form>
 </template>
@@ -28,10 +21,6 @@ export default {
         "https://raw.githubusercontent.com/AdamchukVladimir/krobelus/master/src/assets/hero_img/" +
         this.heroObj.imgId +
         ".png",
-      heroImage1:
-        "https://raw.githubusercontent.com/AdamchukVladimir/krobelus/master/src/assets/hero_img/" +
-        this.heroObj.id +
-        ".png",
     };
   },
 };
@@ -39,5 +28,8 @@ export default {
 <style>
 .heroPick-image img {
   width: 50px;
+}
+.inactive {
+  filter: brightness(40%);
 }
 </style>
