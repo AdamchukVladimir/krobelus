@@ -3,31 +3,37 @@
     <div class="heroes enemyPick">
       <EnemyPick
         @getEnemy="getEnemyParams"
+        @enemyClear="enemyClear"
         :enemyObject="enemy1heroId"
         :enemyId="1"
       />
       <EnemyPick
         @getEnemy="getEnemyParams"
+        @enemyClear="enemyClear"
         :enemyObject="enemy2heroId"
         :enemyId="2"
       />
-      currentenemy
-      {{ currentEnemy }}
+
       <EnemyPick
         @getEnemy="getEnemyParams"
+        @enemyClear="enemyClear"
         :enemyObject="enemy3heroId"
         :enemyId="3"
       />
       <EnemyPick
         @getEnemy="getEnemyParams"
+        @enemyClear="enemyClear"
         :enemyObject="enemy4heroId"
         :enemyId="4"
       />
       <EnemyPick
         @getEnemy="getEnemyParams"
+        @enemyClear="enemyClear"
         :enemyObject="enemy5heroId"
         :enemyId="5"
       />
+      currentenemy
+      {{ currentEnemy }}
     </div>
     <div class="heroes heroesPull">
       <div class="hero str">
@@ -110,7 +116,7 @@ export default {
           },
         ],
       };
-      for (var i = 0; i < this.result.constants.heroes.length; i++) {
+      for (let i = 0; i < this.result.constants.heroes.length; i++) {
         oMainResult.heroes.push({
           id: this.result.constants.heroes[i].id,
           primaryAttribute:
@@ -124,14 +130,33 @@ export default {
   },
   methods: {
     getHeroId(avatarObj) {
-      if (avatarObj.activity == "active") {
-        if (this.currentEnemy == 1) this.enemy1heroId = avatarObj.id;
-        if (this.currentEnemy == 2) this.enemy2heroId = avatarObj.id;
-        if (this.currentEnemy == 3) this.enemy3heroId = avatarObj.id;
-        if (this.currentEnemy == 4) this.enemy4heroId = avatarObj.id;
-        if (this.currentEnemy == 5) this.enemy5heroId = avatarObj.id;
+      if (this.currentEnemy > 0) {
+        if (avatarObj.activity == "active") {
+          if (this.currentEnemy == 1 && this.enemy1heroId == 0) {
+            this.enemy1heroId = avatarObj.id;
+            this.mainResultCicle(avatarObj);
+          }
+          if (this.currentEnemy == 2 && this.enemy2heroId == 0) {
+            this.enemy2heroId = avatarObj.id;
+            this.mainResultCicle(avatarObj);
+          }
+          if (this.currentEnemy == 3 && this.enemy3heroId == 0) {
+            this.enemy3heroId = avatarObj.id;
+            this.mainResultCicle(avatarObj);
+          }
+          if (this.currentEnemy == 4 && this.enemy4heroId == 0) {
+            this.enemy4heroId = avatarObj.id;
+            this.mainResultCicle(avatarObj);
+          }
+          if (this.currentEnemy == 5 && this.enemy5heroId == 0) {
+            this.enemy5heroId = avatarObj.id;
+            this.mainResultCicle(avatarObj);
+          }
+        }
       }
-      for (var i = 0; i < this.mainResult.heroes.length; i++) {
+    },
+    mainResultCicle(avatarObj) {
+      for (let i = 0; i < this.mainResult.heroes.length; i++) {
         if (this.mainResult.heroes[i].id == avatarObj.id) {
           this.mainResult.heroes[i].activity = "inactive";
         }
@@ -140,6 +165,26 @@ export default {
     getEnemyParams(enemyId) {
       console.log("Enemy id " + enemyId);
       this.currentEnemy = enemyId;
+    },
+    enemyClear(clearEnemyObject) {
+      console.log("EnemyClearId " + clearEnemyObject.EnemyClearId);
+      console.log("EnemyClearPickId " + clearEnemyObject.EnemyClearPickId);
+      this.currentEnemy = clearEnemyObject.EnemyClearId;
+
+      if (clearEnemyObject.EnemyClearPickId > 0) {
+        for (let o = 0; o < this.mainResult.heroes.length; o++) {
+          if (
+            this.mainResult.heroes[o].id == clearEnemyObject.EnemyClearPickId
+          ) {
+            this.mainResult.heroes[o].activity = "active";
+          }
+        }
+        if (this.currentEnemy == 1) this.enemy1heroId = 0;
+        if (this.currentEnemy == 2) this.enemy2heroId = 0;
+        if (this.currentEnemy == 3) this.enemy3heroId = 0;
+        if (this.currentEnemy == 4) this.enemy4heroId = 0;
+        if (this.currentEnemy == 5) this.enemy5heroId = 0;
+      }
     },
   },
 };

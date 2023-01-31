@@ -5,12 +5,20 @@
         <a v-on:click="enemyChange()"
           ><img class="hero-image enemyPick-image" :src="enemyHeroImage" />
         </a>
+
         enemyId {{ enemyId }} <br />
         enemyObject {{ enemyObject }}<br />
         flag
         {{ EnemyFlag }}
         counter
         {{ counter }}
+      </div>
+      <div class="enemy-clear" v-on:click="enemyClear()">
+        <a
+          ><img
+            class="enemy-clear-img"
+            src="https://raw.githubusercontent.com/AdamchukVladimir/krobelus/master/src/assets/img/cross.png"
+        /></a>
       </div>
     </div>
   </form>
@@ -30,9 +38,6 @@ export default {
   },
   computed: {
     enemyHeroImage() {
-      // if (this.EnemyFlag) {
-      //   this.enemyObject = 2;
-      // }
       return `https://raw.githubusercontent.com/AdamchukVladimir/krobelus/master/src/assets/hero_img/${this.enemyObject}.png`;
     },
   },
@@ -42,6 +47,14 @@ export default {
       //if (this.EnemyFlag) {
       this.$emit("getEnemy", this.enemyId);
       //}
+    },
+    enemyClear() {
+      console.log("enemyClear");
+      var clearEnemyObject = {
+        EnemyClearId: this.enemyId,
+        EnemyClearPickId: this.enemyObject,
+      };
+      this.$emit("enemyClear", clearEnemyObject);
     },
   },
   data() {
@@ -53,6 +66,18 @@ export default {
 };
 </script>
 <style>
+.enemy-clear {
+  position: relative;
+  top: -125px;
+  right: -87px;
+  width: 28px;
+  height: 25px;
+}
+.enemy-clear img {
+  padding-top: -16px;
+  width: 20px;
+  height: 20px;
+}
 .enemyHero img {
   width: 70px;
   height: 87px;
