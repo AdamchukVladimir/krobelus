@@ -69,7 +69,7 @@ export default {
 .enemy-clear {
   position: relative;
   top: -125px;
-  right: -87px;
+  right: -10%;
   width: 28px;
   height: 25px;
 }
