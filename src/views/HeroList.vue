@@ -1,10 +1,9 @@
 <template>
   <div class="wrapper">
     <div class="heroes enemyPick">
-      <div>
+      <div class="clear">
         <a v-on:click="clearAllEnemy()"
           ><img
-            class="clear"
             src="https://raw.githubusercontent.com/AdamchukVladimir/krobelus/master/src/assets/img/clear.png"
           />
         </a>
@@ -205,6 +204,10 @@ export default {
 }
 .heroesPull {
   grid-area: heroesPull;
+}
+.clear img {
+  width: 28px;
+  height: 25px;
 }
 .str {
   display: grid;
