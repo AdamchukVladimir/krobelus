@@ -1,6 +1,14 @@
 <template>
   <div class="wrapper">
     <div class="heroes enemyPick">
+      <div>
+        <a v-on:click="clearAllEnemy()"
+          ><img
+            class="clear"
+            src="https://raw.githubusercontent.com/AdamchukVladimir/krobelus/master/src/assets/img/clear.png"
+          />
+        </a>
+      </div>
       <EnemyPick
         @getEnemy="getEnemyParams"
         @enemyClear="enemyClear"
@@ -129,6 +137,7 @@ export default {
     },
   },
   methods: {
+    clearAllEnemy() {},
     getHeroId(avatarObj) {
       if (this.currentEnemy > 0) {
         if (avatarObj.activity == "active") {
