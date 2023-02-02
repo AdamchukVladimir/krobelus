@@ -1,7 +1,7 @@
 <template>
   <form>
     <div class="heroes enemyPick">
-      <div class="enemyHero enemyHero1">
+      <div :class="classHeroPick">
         <a v-on:click="enemyChange()"
           ><img class="hero-image enemyPick-image" :src="enemyHeroImage" />
         </a>
@@ -12,6 +12,8 @@
         {{ EnemyFlag }}
         counter
         {{ counter }}
+        activity
+        {{ oEnemy.activity }}
       </div>
       <div class="enemy-clear" v-on:click="enemyClear()">
         <a
@@ -35,10 +37,17 @@ export default {
       type: Object,
       required: true,
     },
+    oEnemy: {
+      type: Object,
+      required: true,
+    },
   },
   computed: {
     enemyHeroImage() {
       return `https://raw.githubusercontent.com/AdamchukVladimir/krobelus/master/src/assets/hero_img/${this.enemyObject}.png`;
+    },
+    classHeroPick() {
+      return `enemyHero ${this.oEnemy.activity}`;
     },
   },
   methods: {
@@ -69,7 +78,7 @@ export default {
 .enemy-clear {
   position: relative;
   top: -125px;
-  right: -10%;
+  right: -87px;
   width: 28px;
   height: 25px;
 }
@@ -82,5 +91,8 @@ export default {
   width: 70px;
   height: 87px;
   border: 1px solid black;
+}
+.pick img {
+  border: 1px solid rgb(223, 217, 217);
 }
 </style>

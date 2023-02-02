@@ -11,12 +11,14 @@
       <EnemyPick
         @getEnemy="getEnemyParams"
         @enemyClear="enemyClear"
+        :oEnemy="oEnemy1"
         :enemyObject="enemy1heroId"
         :enemyId="1"
       />
       <EnemyPick
         @getEnemy="getEnemyParams"
         @enemyClear="enemyClear"
+        :oEnemy="oEnemy2"
         :enemyObject="enemy2heroId"
         :enemyId="2"
       />
@@ -24,18 +26,21 @@
       <EnemyPick
         @getEnemy="getEnemyParams"
         @enemyClear="enemyClear"
+        :oEnemy="oEnemy3"
         :enemyObject="enemy3heroId"
         :enemyId="3"
       />
       <EnemyPick
         @getEnemy="getEnemyParams"
         @enemyClear="enemyClear"
+        :oEnemy="oEnemy4"
         :enemyObject="enemy4heroId"
         :enemyId="4"
       />
       <EnemyPick
         @getEnemy="getEnemyParams"
         @enemyClear="enemyClear"
+        :oEnemy="oEnemy5"
         :enemyObject="enemy5heroId"
         :enemyId="5"
       />
@@ -44,21 +49,30 @@
     </div>
     <div class="heroes heroesPull">
       <div class="hero str">
-        <template v-for="hero in mainResult.heroes" :key="hero.activity">
+        <template
+          v-for="hero in mainResult.heroes"
+          :key="hero.id + hero.activity"
+        >
           <div class="heroPick" v-if="hero.primaryAttribute == 'str'">
             <HeroAvatar @eHeroPick="getHeroId" :heroObj="hero" />
           </div>
         </template>
       </div>
       <div class="hero agi">
-        <template v-for="hero in mainResult.heroes" :key="hero.activity">
+        <template
+          v-for="hero in mainResult.heroes"
+          :key="hero.id + hero.activity"
+        >
           <div class="heroPick" v-if="hero.primaryAttribute == 'agi'">
             <HeroAvatar @eHeroPick="getHeroId" :heroObj="hero" />
           </div>
         </template>
       </div>
       <div class="hero int">
-        <template v-for="hero in mainResult.heroes" :key="hero.activity">
+        <template
+          v-for="hero in mainResult.heroes"
+          :key="hero.id + hero.activity"
+        >
           <div class="heroPick" v-if="hero.primaryAttribute == 'int'">
             <HeroAvatar @eHeroPick="getHeroId" :heroObj="hero" />
           </div>
@@ -103,6 +117,21 @@ export default {
   },
   data() {
     return {
+      oEnemy1: {
+        activity: "off",
+      },
+      oEnemy2: {
+        activity: "off",
+      },
+      oEnemy3: {
+        activity: "off",
+      },
+      oEnemy4: {
+        activity: "off",
+      },
+      oEnemy5: {
+        activity: "off",
+      },
       enemy1heroId: 0,
       enemy2heroId: 0,
       enemy3heroId: 0,
@@ -136,7 +165,28 @@ export default {
     },
   },
   methods: {
-    clearAllEnemy() {},
+    clearAllEnemy() {
+      console.log("clearAllEnemy");
+      for (let u = 0; u < this.mainResult.heroes.length; u++) {
+        if (this.mainResult.heroes[u].activity == "inactive") {
+          console.log(
+            "this.mainResult.heroes[u].id " + this.mainResult.heroes[u].id
+          );
+          this.mainResult.heroes[u].activity = "active";
+        }
+      }
+      this.enemy1heroId = 0;
+      this.enemy2heroId = 0;
+      this.enemy3heroId = 0;
+      this.enemy4heroId = 0;
+      this.enemy5heroId = 0;
+      this.oEnemy1.activity = "off";
+      this.oEnemy2.activity = "off";
+      this.oEnemy3.activity = "off";
+      this.oEnemy4.activity = "off";
+      this.oEnemy5.activity = "off";
+      this.currentEnemy = 0;
+    },
     getHeroId(avatarObj) {
       if (this.currentEnemy > 0) {
         if (avatarObj.activity == "active") {
@@ -173,12 +223,20 @@ export default {
     getEnemyParams(enemyId) {
       console.log("Enemy id " + enemyId);
       this.currentEnemy = enemyId;
+      this.oEnemy1.activity = "off";
+      this.oEnemy2.activity = "off";
+      this.oEnemy3.activity = "off";
+      this.oEnemy4.activity = "off";
+      this.oEnemy5.activity = "off";
+
+      if (this.currentEnemy == 1) this.oEnemy1.activity = "pick";
+      if (this.currentEnemy == 2) this.oEnemy2.activity = "pick";
+      if (this.currentEnemy == 3) this.oEnemy3.activity = "pick";
+      if (this.currentEnemy == 4) this.oEnemy4.activity = "pick";
+      if (this.currentEnemy == 5) this.oEnemy5.activity = "pick";
     },
     enemyClear(clearEnemyObject) {
-      console.log("EnemyClearId " + clearEnemyObject.EnemyClearId);
-      console.log("EnemyClearPickId " + clearEnemyObject.EnemyClearPickId);
       this.currentEnemy = clearEnemyObject.EnemyClearId;
-
       if (clearEnemyObject.EnemyClearPickId > 0) {
         for (let o = 0; o < this.mainResult.heroes.length; o++) {
           if (
