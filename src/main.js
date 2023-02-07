@@ -1,9 +1,11 @@
-import { createApp, provide, h } from 'vue'
-import { DefaultApolloClient } from '@vue/apollo-composable'
-import App from './App.vue'
+import { createApp, provide, h } from 'vue';
+import { DefaultApolloClient } from '@vue/apollo-composable';
+import { createPinia } from 'pinia';
+import App from './App.vue';
 import router from "./router";
-import store from "./store";
+//import store from "./store";
 import apolloClient from '@/api/ApolloClientGraphQL.js'
+import pinia from "@/stores/store.js";
 
 const app = createApp({
   setup () {
@@ -13,4 +15,9 @@ const app = createApp({
   render: () => h(App),
 })
 
-app.use(store).use(router).mount('#app');
+app.use(router);
+app.use(pinia);
+//app.mount('#app');
+router.isReady().then(() => {
+  app.mount("#app");
+});

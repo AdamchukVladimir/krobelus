@@ -79,6 +79,10 @@
         </template>
       </div>
     </div>
+    <div class="heroes recommended_choice">
+      test
+      {{ recommendationStore.heroes }}
+    </div>
   </div>
 </template>
 
@@ -87,7 +91,11 @@ import gql from "graphql-tag";
 import { useQuery } from "@vue/apollo-composable";
 import HeroAvatar from "@/components/HeroAvatar.vue";
 import EnemyPick from "@/components/EnemyPick.vue";
+import pinia from "@/stores/store.js";
+import { useRecommendationStore } from "@/stores/RecommendationStore";
 
+const recommendationStore = useRecommendationStore(pinia);
+console.log("recommendationStore " + recommendationStore.heroes);
 const CHARACTERS_QUERY = gql`
   {
     constants {
@@ -138,6 +146,8 @@ export default {
       enemy4heroId: 0,
       enemy5heroId: 0,
       currentEnemy: 0,
+
+      recommendationStore: recommendationStore,
     };
   },
   computed: {
@@ -180,12 +190,12 @@ export default {
       this.enemy3heroId = 0;
       this.enemy4heroId = 0;
       this.enemy5heroId = 0;
-      this.oEnemy1.activity = "off";
-      this.oEnemy2.activity = "off";
-      this.oEnemy3.activity = "off";
-      this.oEnemy4.activity = "off";
-      this.oEnemy5.activity = "off";
-      this.currentEnemy = 0;
+      // this.oEnemy1.activity = "off";
+      // this.oEnemy2.activity = "off";
+      // this.oEnemy3.activity = "off";
+      // this.oEnemy4.activity = "off";
+      // this.oEnemy5.activity = "off";
+      // this.currentEnemy = 0;
     },
     getHeroId(avatarObj) {
       if (this.currentEnemy > 0) {

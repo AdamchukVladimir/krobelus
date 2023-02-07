@@ -5,7 +5,6 @@
         <a v-on:click="enemyChange()"
           ><img class="hero-image enemyPick-image" :src="enemyHeroImage" />
         </a>
-
         enemyId {{ enemyId }} <br />
         enemyObject {{ enemyObject }}<br />
         flag
