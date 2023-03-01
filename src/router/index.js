@@ -2,8 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HeroList from "../views/HeroList.vue";
 import About from "../views/AboutView.vue";
 import EnemyPick from "../components/EnemyPick.vue";
-import pinia from "@/stores/store.js";
-import { useRecommendationStore} from "@/stores/RecommendationStore";
+
 
 const routes = [
   {

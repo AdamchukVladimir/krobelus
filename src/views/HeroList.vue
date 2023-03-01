@@ -78,24 +78,55 @@
           </div>
         </template>
       </div>
+      <br /><br /><br />
+      <RecomendationPick />
     </div>
-    <div class="heroes recommended_choice">
-      test
-      {{ recommendationStore.heroes }}
+    <div>
+      <button @click="sendMessage({ text: 'Hello' })">Send message</button>
     </div>
+    <div
+      class="heroes recommended_choice"
+      @click="getDefaultHeroesStore(result)"
+    >
+      getData
+    </div>
+    resultVersus
   </div>
 </template>
 
 <script>
+//<div class="heroes recommended_choice" @click="singinStore('vlodya')" >
 import gql from "graphql-tag";
 import { useQuery } from "@vue/apollo-composable";
 import HeroAvatar from "@/components/HeroAvatar.vue";
 import EnemyPick from "@/components/EnemyPick.vue";
-import pinia from "@/stores/store.js";
-import { useRecommendationStore } from "@/stores/RecommendationStore";
+import RecomendationPick from "@/components/RecomendationPick.vue";
+import { useUserStore } from "@/store/userStore";
+import { useRecomendationStore } from "@/store/recomendationStore";
+import { mapActions, mapState } from "pinia";
+import { useMutation } from "@vue/apollo-composable";
 
-const recommendationStore = useRecommendationStore(pinia);
-console.log("recommendationStore " + recommendationStore.heroes);
+/*
+const VERSUS_QUERY = gql`
+  {
+    heroStats {
+      matchUp(heroId: 52, week: 1676246452, take: 124) {
+        vs {
+          heroId1
+          heroId2
+          week
+          matchCount
+          winCount
+          winRateHeroId1
+          winRateHeroId2
+          winsAverage
+        }
+      }
+    }
+  }
+`;
+*/
+
 const CHARACTERS_QUERY = gql`
   {
     constants {
@@ -114,6 +145,7 @@ export default {
   components: {
     HeroAvatar,
     EnemyPick,
+    RecomendationPick,
   },
   setup() {
     const { result, loading, error } = useQuery(CHARACTERS_QUERY);
@@ -146,11 +178,10 @@ export default {
       enemy4heroId: 0,
       enemy5heroId: 0,
       currentEnemy: 0,
-
-      recommendationStore: recommendationStore,
     };
   },
   computed: {
+    ...mapState(useUserStore, { doubleH: "my", loginStore: "userlogin" }),
     mainResult() {
       var oMainResult = {
         heroes: [
@@ -175,6 +206,10 @@ export default {
     },
   },
   methods: {
+    ...mapActions(useUserStore, { singinStore: "singin" }),
+    ...mapActions(useRecomendationStore, {
+      getDefaultHeroesStore: "getDefaultHeroes",
+    }),
     clearAllEnemy() {
       console.log("clearAllEnemy");
       for (let u = 0; u < this.mainResult.heroes.length; u++) {

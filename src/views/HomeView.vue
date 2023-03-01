@@ -8,9 +8,7 @@
 <script>
 // @ is an alias to /src
 import HelloWorld from "@/components/HelloWorld.vue";
-import { useRecommendationStore } from "@/stores/RecommendationStore";
 
-const recommendationStore = useRecommendationStore();
 export default {
   name: "HomeView",
   components: {

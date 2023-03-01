@@ -1,15 +1,32 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
+  <div>
+    <button @click="sendMessage({ text: 'Hello' })">Send message</button>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
-import EnemyPick from "@/components/EnemyPick.vue";
+import { useMutation } from "@vue/apollo-composable";
+import gql from "graphql-tag";
 
+export default {};
+/*
+import gql from "graphql-tag";
 export default {
-  components: {},
+  apollo: {
+    // Simple query that will update the 'hello' vue property
+    hello: gql`
+      {
+        constants {
+          heroes {
+            id
+            stats {
+              primaryAttribute
+            }
+          }
+        }
+      }
+    `,
+  },
 };
+*/
 </script>
