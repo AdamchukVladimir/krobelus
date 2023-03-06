@@ -89,8 +89,8 @@
       @click="getDefaultHeroesStore(result)"
     >
       getData
+      {{ resultVersus }}
     </div>
-    resultVersus
   </div>
 </template>
 
@@ -104,7 +104,7 @@ import RecomendationPick from "@/components/RecomendationPick.vue";
 import { useUserStore } from "@/store/userStore";
 import { useRecomendationStore } from "@/store/recomendationStore";
 import { mapActions, mapState } from "pinia";
-import { useMutation } from "@vue/apollo-composable";
+import { ref, watch } from "vue";
 
 /*
 const VERSUS_QUERY = gql`
@@ -139,6 +139,25 @@ const CHARACTERS_QUERY = gql`
     }
   }
 `;
+const VERSUS_QUERY = gql`
+  query getHeroesById($id: Short!) {
+    heroStats {
+      matchUp(heroId: $id, week: 1676246452, take: 124) {
+        vs {
+          heroId1
+          heroId2
+          week
+          matchCount
+          winCount
+          winRateHeroId1
+          winRateHeroId2
+          synergy
+          winsAverage
+        }
+      }
+    }
+  }
+`;
 
 export default {
   name: "HeroList",
@@ -148,11 +167,23 @@ export default {
     RecomendationPick,
   },
   setup() {
-    const { result, loading, error } = useQuery(CHARACTERS_QUERY);
+    const { result: result, loading, error } = useQuery(CHARACTERS_QUERY);
+    const { result: resultVersus, variables: variablesVersus } = useQuery(
+      VERSUS_QUERY,
+      {}
+    );
+    function changeIdVersus(id) {
+      console.log("id= " + id);
+      variablesVersus.value = {
+        id,
+      };
+    }
     return {
       result,
       loading,
       error,
+      resultVersus,
+      changeIdVersus,
     };
   },
   data() {
@@ -205,6 +236,10 @@ export default {
       return oMainResult;
     },
   },
+  // async created() {
+  //   await this.getAsyncResultVersus();
+  // },
+
   methods: {
     ...mapActions(useUserStore, { singinStore: "singin" }),
     ...mapActions(useRecomendationStore, {
@@ -255,6 +290,9 @@ export default {
             this.enemy5heroId = avatarObj.id;
             this.mainResultCicle(avatarObj);
           }
+          this.changeIdVersus(avatarObj.id);
+          //this.ResultVersusChange(this.resultVersus);
+          //console.log("resultVersus " + this.loadResultVersus());
         }
       }
     },
