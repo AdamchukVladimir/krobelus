@@ -8,6 +8,11 @@
   <router-view />
 </template>
 
+<script setup>
+import { useRecomendationStore } from "@/store/recomendationStore";
+const recomendationStore = useRecomendationStore();
+</script>
+
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

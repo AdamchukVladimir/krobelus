@@ -84,17 +84,28 @@
     <div>
       <button @click="sendMessage({ text: 'Hello' })">Send message</button>
     </div>
+
     <div
       class="heroes recommended_choice"
       @click="getDefaultHeroesStore(result)"
     >
       getData
-      {{ resultVersus }}
+      {{ resultVersusLoading }}
+    </div>
+    <div class="heroes getDefaultQuery" @click="setTestState(12)">
+      getDefaultQuery
+      {{ getVersusHero1 }}
+      {{ enemy1heroStoreComputed }}
+      {{ getTestStore }}
     </div>
   </div>
 </template>
 
+
+
 <script>
+// getData
+// {{ resultVersus }}
 //<div class="heroes recommended_choice" @click="singinStore('vlodya')" >
 import gql from "graphql-tag";
 import { useQuery } from "@vue/apollo-composable";
@@ -168,10 +179,11 @@ export default {
   },
   setup() {
     const { result: result, loading, error } = useQuery(CHARACTERS_QUERY);
-    const { result: resultVersus, variables: variablesVersus } = useQuery(
-      VERSUS_QUERY,
-      {}
-    );
+    const {
+      result: resultVersus,
+      loading: resultVersusLoading,
+      variables: variablesVersus,
+    } = useQuery(VERSUS_QUERY, {});
     function changeIdVersus(id) {
       console.log("id= " + id);
       variablesVersus.value = {
@@ -213,8 +225,46 @@ export default {
   },
   computed: {
     ...mapState(useUserStore, { doubleH: "my", loginStore: "userlogin" }),
+    ...mapState(useRecomendationStore, {
+      getVersusHero1: "getVersusHero1",
+      getVersusHero2: "getVersusHero2",
+      getVersusHero3: "getVersusHero3",
+      getVersusHero4: "getVersusHero4",
+      getVersusHero5: "getVersusHero5",
+      getTestStore: "getTestStore",
+    }),
+    MainResultVersus() {
+      let oMainResultVersus = {
+        heroesVersus: [
+          {
+            heroId2: 0,
+            matchCount: 0,
+            winCount: 0,
+            winRateHeroId1: 0,
+            winRateHeroId2: 0,
+            synergy: 0,
+            winsAverage: 0,
+          },
+        ],
+      };
+      console.log("oMainResultVersus");
+      console.log(
+        "VUE this.versusHero1.heroStats.matchUp[0].vs[0] " +
+          this.versusHero1.heroStats.matchUp[0].vs[0]
+      );
+      for (let i = 0; i < this.result.constants.heroes.length; i++) {
+        console.log("oMainResultVersus");
+      }
+      // for (let i = 0; i < this.result.constants.heroes.length; i++) {
+      //   oMainResultVersus.heroes.push({
+      //     id: this.result.constants.heroes[i].id,
+      //   });
+      // }
+      // return oMainResultVersus;
+    },
+
     mainResult() {
-      var oMainResult = {
+      let oMainResult = {
         heroes: [
           {
             id: 0,
@@ -225,6 +275,7 @@ export default {
         ],
       };
       for (let i = 0; i < this.result.constants.heroes.length; i++) {
+        console.log("mainResult");
         oMainResult.heroes.push({
           id: this.result.constants.heroes[i].id,
           primaryAttribute:
@@ -244,6 +295,13 @@ export default {
     ...mapActions(useUserStore, { singinStore: "singin" }),
     ...mapActions(useRecomendationStore, {
       getDefaultHeroesStore: "getDefaultHeroes",
+      getDefaultQueryStore: "getDefaultQuery",
+      getVersus1Store: "getVersus1",
+      getVersus2Store: "getVersus2",
+      getVersus3Store: "getVersus3",
+      getVersus4Store: "getVersus4",
+      getVersus5Store: "getVersus5",
+      setTestState: "setTestState",
     }),
     clearAllEnemy() {
       console.log("clearAllEnemy");
@@ -273,22 +331,27 @@ export default {
           if (this.currentEnemy == 1 && this.enemy1heroId == 0) {
             this.enemy1heroId = avatarObj.id;
             this.mainResultCicle(avatarObj);
+            this.getVersus1Store(avatarObj.id);
           }
           if (this.currentEnemy == 2 && this.enemy2heroId == 0) {
             this.enemy2heroId = avatarObj.id;
             this.mainResultCicle(avatarObj);
+            this.getVersus2Store(avatarObj.id);
           }
           if (this.currentEnemy == 3 && this.enemy3heroId == 0) {
             this.enemy3heroId = avatarObj.id;
             this.mainResultCicle(avatarObj);
+            this.getVersus3Store(avatarObj.id);
           }
           if (this.currentEnemy == 4 && this.enemy4heroId == 0) {
             this.enemy4heroId = avatarObj.id;
             this.mainResultCicle(avatarObj);
+            this.getVersus4Store(avatarObj.id);
           }
           if (this.currentEnemy == 5 && this.enemy5heroId == 0) {
             this.enemy5heroId = avatarObj.id;
             this.mainResultCicle(avatarObj);
+            this.getVersus5Store(avatarObj.id);
           }
           this.changeIdVersus(avatarObj.id);
           //this.ResultVersusChange(this.resultVersus);
