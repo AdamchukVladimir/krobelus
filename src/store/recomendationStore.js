@@ -6,7 +6,7 @@ import apolloClient from '@/api/ApolloClientGraphQL.js';
 const VERSUS_QUERY = gql`
   query getHeroesById($id: Short!) {
     heroStats {
-      matchUp(heroId: $id, week: 1676246452, take: 124) {
+      matchUp(heroId: $id, week: 1678665652, take: 124) {
         vs {
           heroId1
           heroId2

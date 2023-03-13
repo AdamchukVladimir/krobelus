@@ -97,6 +97,7 @@
       {{ getVersusHero1 }}
       {{ enemy1heroStoreComputed }}
       {{ getTestStore }}
+      {{ MainResultVersus }}
     </div>
   </div>
 </template>
@@ -234,6 +235,7 @@ export default {
       getTestStore: "getTestStore",
     }),
     MainResultVersus() {
+      console.log("oMainResultVersus");
       let oMainResultVersus = {
         heroesVersus: [
           {
@@ -247,14 +249,39 @@ export default {
           },
         ],
       };
-      console.log("oMainResultVersus");
-      console.log(
-        "VUE this.versusHero1.heroStats.matchUp[0].vs[0] " +
-          this.versusHero1.heroStats.matchUp[0].vs[0]
-      );
+      let constantes = [];
+      let constantes2 = [];
       for (let i = 0; i < this.result.constants.heroes.length; i++) {
-        console.log("oMainResultVersus");
+        constantes.push(this.result.constants.heroes[i].id);
+        console.log(
+          "this.result.constants.heroes.id " +
+            JSON.stringify(this.result.constants.heroes[i].id)
+        );
       }
+      console.log(constantes);
+      if (this.getVersusHero1 == 1) {
+        console.log("oMainResultVersus = 1 " + this.getVersusHero1);
+      } else {
+        console.log(
+          "VUE this.getVersusHero1.heroStats.matchUp[0].vs[0] " +
+            JSON.stringify(this.getVersusHero1.heroStats.matchUp[0].vs[0])
+        );
+        for (
+          let p = 0;
+          p < this.getVersusHero1.heroStats.matchUp[0].vs.length;
+          p++
+        ) {
+          constantes2.push(
+            this.getVersusHero1.heroStats.matchUp[0].vs[p].heroId2
+          );
+          console.log(
+            "oMainResultVersus id " +
+              this.getVersusHero1.heroStats.matchUp[0].vs[p].heroId2
+          );
+        }
+        console.log(constantes2);
+      }
+
       // for (let i = 0; i < this.result.constants.heroes.length; i++) {
       //   oMainResultVersus.heroes.push({
       //     id: this.result.constants.heroes[i].id,
