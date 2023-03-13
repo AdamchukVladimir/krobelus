@@ -249,45 +249,68 @@ export default {
           },
         ],
       };
-      let constantes = [];
-      let constantes2 = [];
+
       for (let i = 0; i < this.result.constants.heroes.length; i++) {
-        constantes.push(this.result.constants.heroes[i].id);
-        console.log(
-          "this.result.constants.heroes.id " +
-            JSON.stringify(this.result.constants.heroes[i].id)
-        );
+        oMainResultVersus.heroesVersus.push({
+          heroId2: this.result.constants.heroes[i].id,
+          matchCount: 0,
+          winCount: 0,
+          winRateHeroId1: 0,
+          winRateHeroId2: 0,
+          synergy: 0,
+          winsAverage: 0,
+        });
+
+        console.log("oMainResultVersus " + JSON.stringify(oMainResultVersus));
       }
-      console.log(constantes);
       if (this.getVersusHero1 == 1) {
         console.log("oMainResultVersus = 1 " + this.getVersusHero1);
       } else {
-        console.log(
-          "VUE this.getVersusHero1.heroStats.matchUp[0].vs[0] " +
-            JSON.stringify(this.getVersusHero1.heroStats.matchUp[0].vs[0])
-        );
         for (
           let p = 0;
           p < this.getVersusHero1.heroStats.matchUp[0].vs.length;
           p++
         ) {
-          constantes2.push(
-            this.getVersusHero1.heroStats.matchUp[0].vs[p].heroId2
-          );
-          console.log(
-            "oMainResultVersus id " +
-              this.getVersusHero1.heroStats.matchUp[0].vs[p].heroId2
-          );
+          for (let j = 0; j < oMainResultVersus.heroesVersus.length; j++) {
+            if (
+              this.getVersusHero1.heroStats.matchUp[0].vs[p].heroId2 ==
+              oMainResultVersus.heroesVersus[j].heroId2
+            ) {
+              oMainResultVersus.heroesVersus[j].synergy =
+                oMainResultVersus.heroesVersus[j].synergy +
+                this.getVersusHero1.heroStats.matchUp[0].vs[p].synergy;
+            }
+          }
         }
-        console.log(constantes2);
+      }
+      if (this.getVersusHero2 == 2) {
+        console.log("oMainResultVersus = 2 " + this.getVersusHero2);
+      } else {
+        for (
+          let p = 0;
+          p < this.getVersusHero2.heroStats.matchUp[0].vs.length;
+          p++
+        ) {
+          for (let j = 0; j < oMainResultVersus.heroesVersus.length; j++) {
+            if (
+              this.getVersusHero2.heroStats.matchUp[0].vs[p].heroId2 ==
+              oMainResultVersus.heroesVersus[j].heroId2
+            ) {
+              // Продолжить с этого места, нужно написать фукцию для всех this.getVersusHero?
+              setVersusHeroProperties(this.getVersusHero2, j, p);
+            }
+          }
+        }
+      }
+      console.log("oMainResultVersus " + JSON.stringify(oMainResultVersus));
+
+      function setVersusHeroProperties(oVersusHeroProperties, j, p) {
+        oMainResultVersus.heroesVersus[j].synergy =
+          oMainResultVersus.heroesVersus[j].synergy +
+          oVersusHeroProperties.heroStats.matchUp[0].vs[p].synergy;
       }
 
-      // for (let i = 0; i < this.result.constants.heroes.length; i++) {
-      //   oMainResultVersus.heroes.push({
-      //     id: this.result.constants.heroes[i].id,
-      //   });
-      // }
-      // return oMainResultVersus;
+      return oMainResultVersus;
     },
 
     mainResult() {
