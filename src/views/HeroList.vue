@@ -236,6 +236,21 @@ export default {
     }),
     MainResultVersus() {
       console.log("oMainResultVersus");
+      let aVersusheroes = [
+        this.getVersusHero1,
+        this.getVersusHero2,
+        this.getVersusHero3,
+        this.getVersusHero4,
+        this.getVersusHero5,
+      ];
+      let sEnemyFillCount = 0;
+      for (let k = 0; k < aVersusheroes.length; k++) {
+        if (aVersusheroes[k] != false) {
+          sEnemyFillCount++;
+        }
+      }
+      console.log("sEnemyFillCount - " + sEnemyFillCount);
+
       let oMainResultVersus = {
         heroesVersus: [
           {
@@ -263,51 +278,76 @@ export default {
 
         console.log("oMainResultVersus " + JSON.stringify(oMainResultVersus));
       }
-      if (this.getVersusHero1 == 1) {
-        console.log("oMainResultVersus = 1 " + this.getVersusHero1);
-      } else {
-        for (
-          let p = 0;
-          p < this.getVersusHero1.heroStats.matchUp[0].vs.length;
-          p++
-        ) {
-          for (let j = 0; j < oMainResultVersus.heroesVersus.length; j++) {
-            if (
-              this.getVersusHero1.heroStats.matchUp[0].vs[p].heroId2 ==
-              oMainResultVersus.heroesVersus[j].heroId2
-            ) {
-              oMainResultVersus.heroesVersus[j].synergy =
-                oMainResultVersus.heroesVersus[j].synergy +
-                this.getVersusHero1.heroStats.matchUp[0].vs[p].synergy;
+      //Общая функция для versus Heroes если не false заполняет объект oMainResultVersus
+      for (let k = 0; k < aVersusheroes.length; k++) {
+        if (aVersusheroes[k] == false) {
+          console.log("oMainResultVersus  " + k + 1 + aVersusheroes[k]);
+        } else {
+          for (
+            let p = 0;
+            p < aVersusheroes[k].heroStats.matchUp[0].vs.length;
+            p++
+          ) {
+            for (let j = 0; j < oMainResultVersus.heroesVersus.length; j++) {
+              if (
+                aVersusheroes[k].heroStats.matchUp[0].vs[p].heroId2 ==
+                oMainResultVersus.heroesVersus[j].heroId2
+              ) {
+                setVersusHeroProperties(aVersusheroes[k], j, p);
+              }
             }
           }
         }
       }
-      if (this.getVersusHero2 == 2) {
-        console.log("oMainResultVersus = 2 " + this.getVersusHero2);
-      } else {
-        for (
-          let p = 0;
-          p < this.getVersusHero2.heroStats.matchUp[0].vs.length;
-          p++
-        ) {
-          for (let j = 0; j < oMainResultVersus.heroesVersus.length; j++) {
-            if (
-              this.getVersusHero2.heroStats.matchUp[0].vs[p].heroId2 ==
-              oMainResultVersus.heroesVersus[j].heroId2
-            ) {
-              // Продолжить с этого места, нужно написать фукцию для всех this.getVersusHero?
-              setVersusHeroProperties(this.getVersusHero2, j, p);
-            }
-          }
-        }
-      }
-      console.log("oMainResultVersus " + JSON.stringify(oMainResultVersus));
 
+      //Функционал делит winRateHeroId1, winRateHeroId2, winsAverage на колличество
+      // выбранных героев для корректного расчета
+      for (let j = 0; j < oMainResultVersus.heroesVersus.length; j++) {
+        oMainResultVersus.heroesVersus[j].winRateHeroId1 =
+          oMainResultVersus.heroesVersus[j].winRateHeroId1 / sEnemyFillCount;
+
+        oMainResultVersus.heroesVersus[j].winRateHeroId2 =
+          oMainResultVersus.heroesVersus[j].winRateHeroId2 / sEnemyFillCount;
+
+        oMainResultVersus.heroesVersus[j].winsAverage =
+          oMainResultVersus.heroesVersus[j].winsAverage / sEnemyFillCount;
+      }
+      oMainResultVersus.heroesVersus.sort((a, b) =>
+        a.synergy > b.synergy ? 1 : -1
+      ); //sort
+
+      console.log("oMainResultVersus " + JSON.stringify(oMainResultVersus));
+      //Функция вызывается если текущий VersusHero не false
       function setVersusHeroProperties(oVersusHeroProperties, j, p) {
         oMainResultVersus.heroesVersus[j].synergy =
           oMainResultVersus.heroesVersus[j].synergy +
           oVersusHeroProperties.heroStats.matchUp[0].vs[p].synergy;
+
+        oMainResultVersus.heroesVersus[j].matchCount =
+          oMainResultVersus.heroesVersus[j].matchCount +
+          oVersusHeroProperties.heroStats.matchUp[0].vs[p].matchCount;
+
+        oMainResultVersus.heroesVersus[j].winCount =
+          oMainResultVersus.heroesVersus[j].winCount +
+          oVersusHeroProperties.heroStats.matchUp[0].vs[p].winCount;
+
+        oMainResultVersus.heroesVersus[j].winRateHeroId1 =
+          oMainResultVersus.heroesVersus[j].winRateHeroId1 +
+          oVersusHeroProperties.heroStats.matchUp[0].vs[p].winRateHeroId1;
+
+        oMainResultVersus.heroesVersus[j].winRateHeroId2 =
+          oMainResultVersus.heroesVersus[j].winRateHeroId2 +
+          oVersusHeroProperties.heroStats.matchUp[0].vs[p].winRateHeroId2;
+
+        oMainResultVersus.heroesVersus[j].winsAverage =
+          oMainResultVersus.heroesVersus[j].winsAverage +
+          oVersusHeroProperties.heroStats.matchUp[0].vs[p].winsAverage;
+        //  matchCount: 0, //sEnemyFillCount
+        // winCount: 0,
+        // winRateHeroId1: 0,
+        // winRateHeroId2: 0,
+        // synergy: 0,
+        // winsAverage: 0,
       }
 
       return oMainResultVersus;
