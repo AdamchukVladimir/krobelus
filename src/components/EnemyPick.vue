@@ -5,14 +5,6 @@
         <a v-on:click="enemyChange()"
           ><img class="hero-image enemyPick-image" :src="enemyHeroImage" />
         </a>
-        enemyId {{ enemyId }} <br />
-        enemyObject {{ enemyObject }}<br />
-        flag
-        {{ EnemyFlag }}
-        counter
-        {{ counter }}
-        activity
-        {{ oEnemy.activity }}
       </div>
       <div class="enemy-clear" v-on:click="enemyClear()">
         <a

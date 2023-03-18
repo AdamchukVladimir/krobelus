@@ -44,8 +44,6 @@
         :enemyObject="enemy5heroId"
         :enemyId="5"
       />
-      currentenemy
-      {{ currentEnemy }}
     </div>
     <div class="heroes heroesPull">
       <div class="hero str">
@@ -78,36 +76,21 @@
           </div>
         </template>
       </div>
-      <br /><br /><br />
-      <RecomendationPick />
     </div>
-    <div>
-      <button @click="sendMessage({ text: 'Hello' })">Send message</button>
-    </div>
-
-    <div
-      class="heroes recommended_choice"
-      @click="getDefaultHeroesStore(result)"
-    >
-      getData
-      {{ resultVersusLoading }}
-    </div>
-    <div class="heroes getDefaultQuery" @click="setTestState(12)">
-      getDefaultQuery
-      {{ getVersusHero1 }}
-      {{ enemy1heroStoreComputed }}
-      {{ getTestStore }}
-      {{ MainResultVersus }}
+    <div class="heroes recomendationHeroes">
+      <div class="hero recomendationHero">
+        <template
+          v-for="heroVersus in MainResultVersus.heroesVersus"
+          :key="heroVersus.heroId2"
+        >
+          <HeroAvatar v-if="heroVersus.matchCount > 0" :heroObj="heroVersus" />
+        </template>
+      </div>
     </div>
   </div>
 </template>
 
-
-
 <script>
-// getData
-// {{ resultVersus }}
-//<div class="heroes recommended_choice" @click="singinStore('vlodya')" >
 import gql from "graphql-tag";
 import { useQuery } from "@vue/apollo-composable";
 import HeroAvatar from "@/components/HeroAvatar.vue";
@@ -117,27 +100,6 @@ import { useUserStore } from "@/store/userStore";
 import { useRecomendationStore } from "@/store/recomendationStore";
 import { mapActions, mapState } from "pinia";
 import { ref, watch } from "vue";
-
-/*
-const VERSUS_QUERY = gql`
-  {
-    heroStats {
-      matchUp(heroId: 52, week: 1676246452, take: 124) {
-        vs {
-          heroId1
-          heroId2
-          week
-          matchCount
-          winCount
-          winRateHeroId1
-          winRateHeroId2
-          winsAverage
-        }
-      }
-    }
-  }
-`;
-*/
 
 const CHARACTERS_QUERY = gql`
   {
@@ -152,9 +114,9 @@ const CHARACTERS_QUERY = gql`
   }
 `;
 const VERSUS_QUERY = gql`
-  query getHeroesById($id: Short!) {
+  query getHeroesById($id: Short!, $week: Short!) {
     heroStats {
-      matchUp(heroId: $id, week: 1676246452, take: 124) {
+      matchUp(heroId: $id, week: $week, take: 124) {
         vs {
           heroId1
           heroId2
@@ -180,23 +142,10 @@ export default {
   },
   setup() {
     const { result: result, loading, error } = useQuery(CHARACTERS_QUERY);
-    const {
-      result: resultVersus,
-      loading: resultVersusLoading,
-      variables: variablesVersus,
-    } = useQuery(VERSUS_QUERY, {});
-    function changeIdVersus(id) {
-      console.log("id= " + id);
-      variablesVersus.value = {
-        id,
-      };
-    }
     return {
       result,
       loading,
       error,
-      resultVersus,
-      changeIdVersus,
     };
   },
   data() {
@@ -261,6 +210,7 @@ export default {
             winRateHeroId2: 0,
             synergy: 0,
             winsAverage: 0,
+            imgId: 0,
           },
         ],
       };
@@ -274,9 +224,10 @@ export default {
           winRateHeroId2: 0,
           synergy: 0,
           winsAverage: 0,
+          imgId: this.result.constants.heroes[i].id,
         });
 
-        console.log("oMainResultVersus " + JSON.stringify(oMainResultVersus));
+        //console.log("oMainResultVersus " + JSON.stringify(oMainResultVersus));
       }
       //Общая функция для versus Heroes если не false заполняет объект oMainResultVersus
       for (let k = 0; k < aVersusheroes.length; k++) {
@@ -316,7 +267,7 @@ export default {
         a.synergy > b.synergy ? 1 : -1
       ); //sort
 
-      console.log("oMainResultVersus " + JSON.stringify(oMainResultVersus));
+      //console.log("oMainResultVersus " + JSON.stringify(oMainResultVersus));
       //Функция вызывается если текущий VersusHero не false
       function setVersusHeroProperties(oVersusHeroProperties, j, p) {
         oMainResultVersus.heroesVersus[j].synergy =
@@ -342,14 +293,7 @@ export default {
         oMainResultVersus.heroesVersus[j].winsAverage =
           oMainResultVersus.heroesVersus[j].winsAverage +
           oVersusHeroProperties.heroStats.matchUp[0].vs[p].winsAverage;
-        //  matchCount: 0, //sEnemyFillCount
-        // winCount: 0,
-        // winRateHeroId1: 0,
-        // winRateHeroId2: 0,
-        // synergy: 0,
-        // winsAverage: 0,
       }
-
       return oMainResultVersus;
     },
 
@@ -443,7 +387,7 @@ export default {
             this.mainResultCicle(avatarObj);
             this.getVersus5Store(avatarObj.id);
           }
-          this.changeIdVersus(avatarObj.id);
+          //this.changeIdVersus(avatarObj.id);
           //this.ResultVersusChange(this.resultVersus);
           //console.log("resultVersus " + this.loadResultVersus());
         }
@@ -499,9 +443,21 @@ export default {
 .heroesPull {
   grid-area: heroesPull;
 }
+.recomendationHeroes {
+  grid-area: recomendationHeroes;
+  width: auto;
+}
 .clear img {
   width: 28px;
   height: 25px;
+}
+.recomendationHero {
+  display: grid;
+  width: auto;
+  right: 300px;
+  margin-bottom: 15px;
+  gap: 5px;
+  grid-template-columns: 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px;
 }
 .str {
   display: grid;
@@ -530,6 +486,8 @@ export default {
   display: grid;
   grid-gap: 10px;
   grid-template-columns: 1fr 4fr;
-  grid-template-areas: "enemyPick heroesPull";
+  grid-template-areas:
+    "enemyPick heroesPull"
+    ". recomendationHeroes";
 }
 </style>

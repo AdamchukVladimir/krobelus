@@ -3,10 +3,15 @@ import gql from "graphql-tag";
 import { provideApolloClient , useQuery } from "@vue/apollo-composable";
 import apolloClient from '@/api/ApolloClientGraphQL.js';
 //import {signin } from '@/api/signin';
+
+// const VERSUS_QUERY = gql`
+//   query getHeroesById($id: Short!) {
+//     heroStats {
+//       matchUp(heroId: $id, week: 1679165814, take: 124) {
 const VERSUS_QUERY = gql`
-  query getHeroesById($id: Short!) {
+  query getHeroesById($id: Short!, $week: Long!) {
     heroStats {
-      matchUp(heroId: $id, week: 1678665652, take: 124) {
+      matchUp(heroId: $id, week: $week, take: 124) {
         vs {
           heroId1
           heroId2
@@ -24,9 +29,13 @@ const VERSUS_QUERY = gql`
 `;
 
 function changeIDvariablesVersus(id, variablesName) {
-  console.log("id= " + id);
+  console.log("ids= " + id);
+  console.log("week= " + new Date.now());
+  //let week = new Date.now();console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);
+  
   variablesName.value = {
     id,
+    
   };
 }
 
@@ -67,34 +76,47 @@ export const useRecomendationStore = defineStore('RecomendationStore', {
       getVersusHero5: (state) =>state.versusHero5,
     },
     actions: {
-        setTestState(value){
-        this.testState = value;
-        this.versusHero1 = value;
+        clearAllVersusState(){
+          this.versusHero1 = false;
+          this.versusHero2 = false;
+          this.versusHero3 = false;
+          this.versusHero4 = false;
+          this.versusHero5 = false;
+        },
+        clearOneVersusState(idVersus){
+          this.idVersus = false;
         },
         getVersus1(id){
           console.log("id= " + id);
+          
+          //let week = 1679165814;
+          let week = parseInt(new Date().getTime()/1000);
+          console.log("week= " + parseInt(new Date().getTime()/1000));
           variablesVersus1.value = {
             id,
+            week,
           };
           setTimeout(() => {
-            console.log("RAW resultVersus1 " + JSON.stringify(resultVersus1));
-            console.log("RAW resultVersus1 " + JSON.stringify(resultVersus1._rawValue.heroStats.matchUp[0].vs[0]));
+            // console.log("RAW resultVersus1 " + JSON.stringify(resultVersus1));
+            // console.log("RAW resultVersus1 " + JSON.stringify(resultVersus1._rawValue.heroStats.matchUp[0].vs[0]));
              this.versusHero1 = resultVersus1._rawValue;
              this.testState = "test";
-             console.log(" this.versusHero1 " +  this.versusHero1);
-             console.log("resultVersus1 " + JSON.stringify(this.versusHero1.heroStats.matchUp[0].vs[0]));
-             console.log("testState " + JSON.stringify(this.testState));
-             console.log("clear resultVersus1 2" + JSON.stringify(resultVersus1._rawValue));
-             console.log("clear resultVersus1 bool2 " + (typeof resultVersus1._rawValue == "undefined"));
-             console.log("clear resultVersus1 bool2 x " + (!resultVersus1._rawValue));
+            //  console.log(" this.versusHero1 " +  this.versusHero1);
+            //  console.log("resultVersus1 " + JSON.stringify(this.versusHero1.heroStats.matchUp[0].vs[0]));
+            //  console.log("testState " + JSON.stringify(this.testState));
+            //  console.log("clear resultVersus1 2" + JSON.stringify(resultVersus1._rawValue));
+            //  console.log("clear resultVersus1 bool2 " + (typeof resultVersus1._rawValue == "undefined"));
+            //  console.log("clear resultVersus1 bool2 x " + (!resultVersus1._rawValue));
              //this.versusHero1 = "test2";
           }, "2000");
            
         },
         getVersus2(id){
           console.log("id= " + id);
+          let week = parseInt(new Date().getTime()/1000);
           variablesVersus2.value = {
             id,
+            week,
           };
           setTimeout(() => {
             this.versusHero2 = resultVersus2._rawValue;
@@ -103,8 +125,10 @@ export const useRecomendationStore = defineStore('RecomendationStore', {
         },
         getVersus3(id){
           console.log("id= " + id);
+          let week = parseInt(new Date().getTime()/1000);
           variablesVersus3.value = {
             id,
+            week,
           };
           setTimeout(() => {
             this.versusHero3 = resultVersus3._rawValue;
@@ -113,8 +137,10 @@ export const useRecomendationStore = defineStore('RecomendationStore', {
         },
         getVersus4(id){
           console.log("id= " + id);
+          let week = parseInt(new Date().getTime()/1000);
           variablesVersus4.value = {
             id,
+            week,
           };
           setTimeout(() => {
             this.versusHero4 = resultVersus4._rawValue;
@@ -123,8 +149,10 @@ export const useRecomendationStore = defineStore('RecomendationStore', {
         },
         getVersus5(id){
           console.log("id= " + id);
+          let week = parseInt(new Date().getTime()/1000);
           variablesVersus5.value = {
             id,
+            week,
           };
           setTimeout(() => {
             this.versusHero5 = resultVersus5._rawValue;
