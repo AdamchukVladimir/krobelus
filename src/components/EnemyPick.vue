@@ -66,15 +66,19 @@ export default {
 };
 </script>
 <style>
+/*
 .enemy-clear {
-  position: relative;
-  top: -125px;
-  right: -87px;
+  position: absolute;
+  top: -90px;
+  right: -170px;
   width: 28px;
   height: 25px;
 }
+*/
 .enemy-clear img {
-  padding-top: -16px;
+  position: absolute;
+  margin-top: -85px;
+  margin-left: 10px;
   width: 20px;
   height: 20px;
 }

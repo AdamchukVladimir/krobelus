@@ -84,7 +84,15 @@ export const useRecomendationStore = defineStore('RecomendationStore', {
           this.versusHero5 = false;
         },
         clearOneVersusState(idVersus){
-          this.idVersus = false;
+          console.log("idVersus " + idVersus);
+          switch(idVersus){
+            case 1:this.versusHero1 = false;
+            case 2:this.versusHero2 = false;
+            case 3:this.versusHero3 = false;
+            case 4:this.versusHero4 = false;
+            case 5:this.versusHero5 = false;
+          }
+          
         },
         getVersus1(id){
           console.log("id= " + id);

@@ -77,13 +77,53 @@
         </template>
       </div>
     </div>
+    <div class="settings">
+      <input
+        type="radio"
+        class="advantage"
+        id="advantage"
+        value="advantage"
+        v-model="sorting"
+      />
+      <label for="advantage">advantage</label>
+      <br />
+      <input
+        type="radio"
+        class="synergy"
+        id="synergy"
+        value="synergy"
+        v-model="sorting"
+      />
+      <label for="synergy">synergy</label>
+      <br />
+      <span>Sorted by: {{ sorting }}</span>
+    </div>
     <div class="heroes recomendationHeroes">
       <div class="hero recomendationHero">
         <template
           v-for="heroVersus in MainResultVersus.heroesVersus"
           :key="heroVersus.heroId2"
         >
-          <HeroAvatar v-if="heroVersus.matchCount > 0" :heroObj="heroVersus" />
+          <HeroAvatar
+            v-if="
+              heroVersus.matchCount > 0 &&
+              heroVersus.synergy < 0 &&
+              heroVersus.activity == true
+            "
+            :heroObj="heroVersus"
+          />
+          <div
+            v-if="
+              heroVersus.matchCount > 0 &&
+              heroVersus.synergy < 0 &&
+              heroVersus.activity == true
+            "
+          >
+            {{ ((-heroVersus.advantage * 100) / 100).toFixed(3) }}
+            {{ -heroVersus.synergy.toFixed(3) }}
+            {{ (heroVersus.winRateHeroId2 * 100).toFixed(1) }}%
+            {{ (1 - heroVersus.winsAverage).toFixed(3) }}
+          </div>
         </template>
       </div>
     </div>
@@ -171,6 +211,7 @@ export default {
       enemy4heroId: 0,
       enemy5heroId: 0,
       currentEnemy: 0,
+      sorting: "advantage",
     };
   },
   computed: {
@@ -209,7 +250,9 @@ export default {
             winRateHeroId1: 0,
             winRateHeroId2: 0,
             synergy: 0,
+            advantage: 0,
             winsAverage: 0,
+            activity: true,
             imgId: 0,
           },
         ],
@@ -223,7 +266,9 @@ export default {
           winRateHeroId1: 0,
           winRateHeroId2: 0,
           synergy: 0,
+          advantage: 0,
           winsAverage: 0,
+          activity: true,
           imgId: this.result.constants.heroes[i].id,
         });
 
@@ -240,6 +285,12 @@ export default {
             p++
           ) {
             for (let j = 0; j < oMainResultVersus.heroesVersus.length; j++) {
+              if (
+                oMainResultVersus.heroesVersus[j].heroId2 ==
+                aVersusheroes[k].heroStats.matchUp[0].vs[p].heroId1
+              ) {
+                oMainResultVersus.heroesVersus[j].activity = false; //Отключаем героя чтобы выбранные не могли попасть в рекомендованные
+              }
               if (
                 aVersusheroes[k].heroStats.matchUp[0].vs[p].heroId2 ==
                 oMainResultVersus.heroesVersus[j].heroId2
@@ -262,12 +313,24 @@ export default {
 
         oMainResultVersus.heroesVersus[j].winsAverage =
           oMainResultVersus.heroesVersus[j].winsAverage / sEnemyFillCount;
-      }
-      oMainResultVersus.heroesVersus.sort((a, b) =>
-        a.synergy > b.synergy ? 1 : -1
-      ); //sort
 
-      //console.log("oMainResultVersus " + JSON.stringify(oMainResultVersus));
+        //Сумма synergy и разницы между ср.Винрейтом и 50%
+        oMainResultVersus.heroesVersus[j].advantage =
+          oMainResultVersus.heroesVersus[j].advantage +
+          oMainResultVersus.heroesVersus[j].synergy +
+          (0.5 - oMainResultVersus.heroesVersus[j].winRateHeroId2) * 100;
+      }
+      if (this.sorting == "advantage") {
+        oMainResultVersus.heroesVersus.sort((a, b) =>
+          a.advantage > b.advantage ? 1 : -1
+        );
+      } else if (this.sorting == "synergy") {
+        oMainResultVersus.heroesVersus.sort((a, b) =>
+          a.synergy > b.synergy ? 1 : -1
+        ); //sort
+      }
+
+      console.log("oMainResultVersus " + JSON.stringify(oMainResultVersus));
       //Функция вызывается если текущий VersusHero не false
       function setVersusHeroProperties(oVersusHeroProperties, j, p) {
         oMainResultVersus.heroesVersus[j].synergy =
@@ -335,7 +398,8 @@ export default {
       getVersus3Store: "getVersus3",
       getVersus4Store: "getVersus4",
       getVersus5Store: "getVersus5",
-      setTestState: "setTestState",
+      clearAllVersusStateStore: "clearAllVersusState",
+      clearOneVersusStateStore: "clearOneVersusState",
     }),
     clearAllEnemy() {
       console.log("clearAllEnemy");
@@ -352,6 +416,7 @@ export default {
       this.enemy3heroId = 0;
       this.enemy4heroId = 0;
       this.enemy5heroId = 0;
+      this.clearAllVersusStateStore(); // Обнуляет Store в Pinia
       // this.oEnemy1.activity = "off";
       // this.oEnemy2.activity = "off";
       // this.oEnemy3.activity = "off";
@@ -430,6 +495,8 @@ export default {
         if (this.currentEnemy == 3) this.enemy3heroId = 0;
         if (this.currentEnemy == 4) this.enemy4heroId = 0;
         if (this.currentEnemy == 5) this.enemy5heroId = 0;
+        console.log("enemyClear " + this.currentEnemy);
+        this.clearOneVersusStateStore(this.currentEnemy); // Обнуляет Store указанного героя в Pinia
       }
     },
   },
@@ -445,8 +512,15 @@ export default {
 }
 .recomendationHeroes {
   grid-area: recomendationHeroes;
-  width: auto;
 }
+.settings {
+  grid-area: settings;
+}
+
+.advantage {
+  color: green;
+}
+
 .clear img {
   width: 28px;
   height: 25px;
@@ -456,21 +530,21 @@ export default {
   width: auto;
   right: 300px;
   margin-bottom: 15px;
-  gap: 5px;
+  gap: 7px;
   grid-template-columns: 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px;
 }
 .str {
   display: grid;
   width: auto;
   right: 300px;
-  margin-bottom: 15px;
-  gap: 5px;
+  margin-bottom: 25px;
+  gap: 7px;
   grid-template-columns: 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px;
 }
 .agi {
   display: grid;
-  margin-bottom: 15px;
-  gap: 5px;
+  margin-bottom: 25px;
+  gap: 7px;
   grid-template-columns: 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px;
 }
 .int {
@@ -478,16 +552,22 @@ export default {
   width: auto;
   margin-left: auto;
   margin-right: auto;
-  gap: 5px;
+  gap: 7px;
   grid-template-columns: 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px;
 }
-
+.color-circle {
+  width: 50px;
+  height: 50px;
+  margin-top: 8px;
+  border: 2px solid #d8d8d8;
+  border-radius: 50%;
+}
 .wrapper {
   display: grid;
   grid-gap: 10px;
   grid-template-columns: 1fr 4fr;
   grid-template-areas:
     "enemyPick heroesPull"
-    ". recomendationHeroes";
+    "settings recomendationHeroes";
 }
 </style>
