@@ -78,25 +78,37 @@
       </div>
     </div>
     <div class="settings">
-      <input
-        type="radio"
-        class="advantage"
-        id="advantage"
-        value="advantage"
-        v-model="sorting"
-      />
-      <label for="advantage">advantage</label>
-      <br />
-      <input
-        type="radio"
-        class="synergy"
-        id="synergy"
-        value="synergy"
-        v-model="sorting"
-      />
-      <label for="synergy">synergy</label>
-      <br />
-      <span>Sorted by: {{ sorting }}</span>
+      <div class="sorting">
+        <span>Sorted by: </span>
+        <br />
+        <input
+          type="radio"
+          class="advantage"
+          id="advantage"
+          value="advantage"
+          v-model="sorting"
+        />
+        <label for="advantage">advantage</label>
+        <br />
+        <input
+          type="radio"
+          class="synergy"
+          id="synergy"
+          value="synergy"
+          v-model="sorting"
+        />
+        <label for="synergy">synergy </label>
+        <br />
+        <input
+          type="radio"
+          class="winrate"
+          id="winrate"
+          value="winrate"
+          v-model="sorting"
+        />
+        <label for="winrate">winrate </label>
+        <br />
+      </div>
     </div>
     <div class="heroes recomendationHeroes">
       <div class="hero recomendationHero">
@@ -106,23 +118,50 @@
         >
           <HeroAvatar
             v-if="
-              heroVersus.matchCount > 0 &&
-              heroVersus.synergy < 0 &&
-              heroVersus.activity == true
+              (heroVersus.matchCount > 0 &&
+                heroVersus.activity == true &&
+                heroVersus.synergy < 0 &&
+                (sorting == 'synergy' || sorting == 'winrate')) ||
+              (heroVersus.matchCount > 0 &&
+                heroVersus.activity == true &&
+                heroVersus.advantage < 0 &&
+                (sorting == 'advantage' || sorting == 'winrate'))
             "
             :heroObj="heroVersus"
           />
           <div
             v-if="
-              heroVersus.matchCount > 0 &&
-              heroVersus.synergy < 0 &&
-              heroVersus.activity == true
+              (heroVersus.matchCount > 0 &&
+                heroVersus.activity == true &&
+                heroVersus.synergy < 0 &&
+                (sorting == 'synergy' || sorting == 'winrate')) ||
+              (heroVersus.matchCount > 0 &&
+                heroVersus.activity == true &&
+                heroVersus.advantage < 0 &&
+                (sorting == 'advantage' || sorting == 'winrate'))
             "
           >
-            {{ ((-heroVersus.advantage * 100) / 100).toFixed(3) }}
-            {{ -heroVersus.synergy.toFixed(3) }}
-            {{ (heroVersus.winRateHeroId2 * 100).toFixed(1) }}%
-            {{ (1 - heroVersus.winsAverage).toFixed(3) }}
+            <p
+              class="recomendation-info"
+              v-bind:class="{ sorting_active: sorting == 'advantage' }"
+            >
+              {{ ((-heroVersus.advantage * 100) / 100).toFixed(3) }}
+            </p>
+            <p
+              class="recomendation-info"
+              v-bind:class="{ sorting_active: sorting == 'synergy' }"
+            >
+              {{ ((-heroVersus.synergy * 100) / 100).toFixed(3) }}
+            </p>
+            <p
+              class="recomendation-info"
+              v-bind:class="{ sorting_active: sorting == 'winrate' }"
+            >
+              {{ (1 - heroVersus.winsAverage).toFixed(3) }}
+            </p>
+            <p class="recomendation-info">
+              {{ (heroVersus.winRateHeroId2 * 100).toFixed(1) }}%
+            </p>
           </div>
         </template>
       </div>
@@ -277,7 +316,7 @@ export default {
       //Общая функция для versus Heroes если не false заполняет объект oMainResultVersus
       for (let k = 0; k < aVersusheroes.length; k++) {
         if (aVersusheroes[k] == false) {
-          console.log("oMainResultVersus  " + k + 1 + aVersusheroes[k]);
+          console.log("oMainResultVersus  " + (k + 1) + aVersusheroes[k]);
         } else {
           for (
             let p = 0;
@@ -328,9 +367,13 @@ export default {
         oMainResultVersus.heroesVersus.sort((a, b) =>
           a.synergy > b.synergy ? 1 : -1
         ); //sort
+      } else if (this.sorting == "winrate") {
+        oMainResultVersus.heroesVersus.sort((a, b) =>
+          a.winsAverage > b.winsAverage ? 1 : -1
+        ); //sort
       }
 
-      console.log("oMainResultVersus " + JSON.stringify(oMainResultVersus));
+      //console.log("oMainResultVersus " + JSON.stringify(oMainResultVersus));
       //Функция вызывается если текущий VersusHero не false
       function setVersusHeroProperties(oVersusHeroProperties, j, p) {
         oMainResultVersus.heroesVersus[j].synergy =
@@ -465,6 +508,8 @@ export default {
         }
       }
     },
+
+    //Добавляет текущему пользователю белую рамку
     getEnemyParams(enemyId) {
       console.log("Enemy id " + enemyId);
       this.currentEnemy = enemyId;
@@ -495,7 +540,9 @@ export default {
         if (this.currentEnemy == 3) this.enemy3heroId = 0;
         if (this.currentEnemy == 4) this.enemy4heroId = 0;
         if (this.currentEnemy == 5) this.enemy5heroId = 0;
+        this.getEnemyParams(this.currentEnemy);
         console.log("enemyClear " + this.currentEnemy);
+
         this.clearOneVersusStateStore(this.currentEnemy); // Обнуляет Store указанного героя в Pinia
       }
     },
@@ -516,16 +563,32 @@ export default {
 .settings {
   grid-area: settings;
 }
-
+.sorting {
+  margin-left: auto;
+  margin-right: auto;
+  width: 130px;
+  text-align: left;
+}
+.sorting span {
+  margin-left: 5px;
+  position: relative;
+  top: -5px;
+}
+.sorting_active {
+  color: green;
+}
 .advantage {
   color: green;
 }
-
+.recomendation-info {
+  margin: 0;
+}
 .clear img {
   width: 28px;
   height: 25px;
 }
 .recomendationHero {
+  font: 0.9em "Fira Sans", sans-serif;
   display: grid;
   width: auto;
   right: 300px;
@@ -562,12 +625,25 @@ export default {
   border: 2px solid #d8d8d8;
   border-radius: 50%;
 }
+.recomendation-info::before {
+  content: "";
+  width: 0.65em;
+  height: 0.65em;
+  border-radius: 50%;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em var(--form-control-color);
+}
 .wrapper {
   display: grid;
-  grid-gap: 10px;
+  grid-gap: 50px 10px;
   grid-template-columns: 1fr 4fr;
   grid-template-areas:
     "enemyPick heroesPull"
     "settings recomendationHeroes";
+}
+body {
+  font: small-caps 20px/1 sans-serif;
+  font: 1.1em "Fira Sans", sans-serif;
 }
 </style>

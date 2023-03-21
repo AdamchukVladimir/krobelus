@@ -77,22 +77,22 @@ export const useRecomendationStore = defineStore('RecomendationStore', {
     },
     actions: {
         clearAllVersusState(){
-          this.versusHero1 = false;
-          this.versusHero2 = false;
-          this.versusHero3 = false;
-          this.versusHero4 = false;
-          this.versusHero5 = false;
+          setTimeout(() => {
+            this.versusHero1 = false;
+            this.versusHero2 = false;
+            this.versusHero3 = false;
+            this.versusHero4 = false;
+            this.versusHero5 = false;
+          }, "1000");
         },
         clearOneVersusState(idVersus){
-          console.log("idVersus " + idVersus);
-          switch(idVersus){
-            case 1:this.versusHero1 = false;
-            case 2:this.versusHero2 = false;
-            case 3:this.versusHero3 = false;
-            case 4:this.versusHero4 = false;
-            case 5:this.versusHero5 = false;
-          }
-          
+          setTimeout(() => {
+            if (idVersus==1)      this.versusHero1 = false;
+            else if (idVersus==2) this.versusHero2 = false;
+            else if (idVersus==3) this.versusHero3 = false;
+            else if (idVersus==4) this.versusHero4 = false;
+            else if (idVersus==5) this.versusHero5 = false;
+        }, "1000");
         },
         getVersus1(id){
           console.log("id= " + id);
@@ -116,7 +116,7 @@ export const useRecomendationStore = defineStore('RecomendationStore', {
             //  console.log("clear resultVersus1 bool2 " + (typeof resultVersus1._rawValue == "undefined"));
             //  console.log("clear resultVersus1 bool2 x " + (!resultVersus1._rawValue));
              //this.versusHero1 = "test2";
-          }, "2000");
+          }, "1000");
            
         },
         getVersus2(id){
