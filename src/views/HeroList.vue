@@ -108,12 +108,15 @@
         />
         <label for="winrate">winrate </label>
         <br />
+        <br />
+        <input type="checkbox" id="expertmode" v-model="expertmodeModel" />
+        <label for="expertmode">expert mode</label>
       </div>
     </div>
     <div class="heroes recomendationHeroes">
       <div class="hero recomendationHero">
         <template
-          v-for="heroVersus in MainResultVersus.heroesVersus"
+          v-for="(heroVersus, heroVersusIndex) in MainResultVersus.heroesVersus"
           :key="heroVersus.heroId2"
         >
           <HeroAvatar
@@ -121,24 +124,33 @@
               (heroVersus.matchCount > 0 &&
                 heroVersus.activity == true &&
                 heroVersus.synergy < 0 &&
-                (sorting == 'synergy' || sorting == 'winrate')) ||
+                sorting == 'synergy') ||
               (heroVersus.matchCount > 0 &&
                 heroVersus.activity == true &&
                 heroVersus.advantage < 0 &&
-                (sorting == 'advantage' || sorting == 'winrate'))
+                sorting == 'advantage') ||
+              (heroVersusIndex < 67 &&
+                heroVersus.matchCount > 0 &&
+                heroVersus.activity == true &&
+                sorting == 'winrate')
             "
             :heroObj="heroVersus"
           />
           <div
             v-if="
-              (heroVersus.matchCount > 0 &&
+              expertmodeModel == true &&
+              ((heroVersus.matchCount > 0 &&
                 heroVersus.activity == true &&
                 heroVersus.synergy < 0 &&
-                (sorting == 'synergy' || sorting == 'winrate')) ||
-              (heroVersus.matchCount > 0 &&
-                heroVersus.activity == true &&
-                heroVersus.advantage < 0 &&
-                (sorting == 'advantage' || sorting == 'winrate'))
+                sorting == 'synergy') ||
+                (heroVersus.matchCount > 0 &&
+                  heroVersus.activity == true &&
+                  heroVersus.advantage < 0 &&
+                  sorting == 'advantage') ||
+                (heroVersusIndex < 67 &&
+                  heroVersus.matchCount > 0 &&
+                  heroVersus.activity == true &&
+                  sorting == 'winrate'))
             "
           >
             <p
@@ -185,6 +197,14 @@ const CHARACTERS_QUERY = gql`
     constants {
       heroes {
         id
+        name
+        aliases
+        roles {
+          roleId
+          level
+        }
+        displayName
+        shortName
         stats {
           primaryAttribute
         }
@@ -251,6 +271,7 @@ export default {
       enemy5heroId: 0,
       currentEnemy: 0,
       sorting: "advantage",
+      expertmodeModel: true,
     };
   },
   computed: {
@@ -263,6 +284,7 @@ export default {
       getVersusHero5: "getVersusHero5",
       getTestStore: "getTestStore",
     }),
+
     MainResultVersus() {
       console.log("oMainResultVersus");
       let aVersusheroes = [
@@ -329,6 +351,8 @@ export default {
                 aVersusheroes[k].heroStats.matchUp[0].vs[p].heroId1
               ) {
                 oMainResultVersus.heroesVersus[j].activity = false; //Отключаем героя чтобы выбранные не могли попасть в рекомендованные
+                oMainResultVersus.heroesVersus[j].winsAverage =
+                  oMainResultVersus.heroesVersus[j].winsAverage + 1; //Костыль чтобы у уже отключенных героев снизить винрейт, чтобы их индексы не попадали в выдачу
               }
               if (
                 aVersusheroes[k].heroStats.matchUp[0].vs[p].heroId2 ==
@@ -402,7 +426,6 @@ export default {
       }
       return oMainResultVersus;
     },
-
     mainResult() {
       let oMainResult = {
         heroes: [
@@ -411,6 +434,12 @@ export default {
             primaryAttribute: "",
             imgId: 0,
             activity: "",
+            nameFull: "",
+            displayName: "",
+            shortName: "",
+            aliases: "",
+            roleId: "",
+            roleLevel: "",
           },
         ],
       };
@@ -420,6 +449,12 @@ export default {
           id: this.result.constants.heroes[i].id,
           primaryAttribute:
             this.result.constants.heroes[i].stats.primaryAttribute,
+          nameFull: this.result.constants.heroes[i].name,
+          displayName: this.result.constants.heroes[i].displayName,
+          shortName: this.result.constants.heroes[i].shortName,
+          aliases: this.result.constants.heroes[i].aliases,
+          roleId: this.result.constants.heroes[i].roles.roleId,
+          roleLevel: this.result.constants.heroes[i].roles.level,
           imgId: this.result.constants.heroes[i].id,
           activity: "active",
         });
@@ -557,8 +592,12 @@ export default {
 .heroesPull {
   grid-area: heroesPull;
 }
+
 .recomendationHeroes {
   grid-area: recomendationHeroes;
+}
+.recomendationHeroes img {
+  filter: brightness(115%);
 }
 .settings {
   grid-area: settings;

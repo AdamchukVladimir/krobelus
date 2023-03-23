@@ -1,4 +1,11 @@
 <template>
+  <nav></nav>
+  <router-view />
+</template>
+
+<script setup>
+/*
+<template>
   <nav>
     <router-link :to="{ name: 'HeroList' }">Heroes</router-link> |
     <router-link :to="{ name: 'About' }">About</router-link> |
@@ -7,8 +14,7 @@
   </nav>
   <router-view />
 </template>
-
-<script setup>
+*/
 import { useRecomendationStore } from "@/store/recomendationStore";
 const recomendationStore = useRecomendationStore();
 </script>
