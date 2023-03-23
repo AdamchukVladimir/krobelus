@@ -459,6 +459,9 @@ export default {
           activity: "active",
         });
       }
+      oMainResult.heroes.sort((a, b) =>
+        a.displayName > b.displayName ? 1 : -1
+      );
       return oMainResult;
     },
   },
