@@ -3,6 +3,7 @@ import HeroList from "../views/HeroList.vue";
 import About from "../views/AboutView.vue";
 import EnemyPick from "../components/EnemyPick.vue";
 import SignUp from "../components/SignUp.vue";
+import Login from "../components/Login.vue";
 
 
 const routes = [
@@ -33,6 +34,11 @@ const routes = [
     path: '/signup',
     name: 'SignUp',
     component: SignUp,
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
   }
 ]
 

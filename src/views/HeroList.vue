@@ -1,4 +1,5 @@
 <template>
+  <Header />
   <div class="wrapper">
     <div class="heroes enemyPick">
       <div class="clear">
@@ -191,6 +192,7 @@ import { useUserStore } from "@/store/userStore";
 import { useRecomendationStore } from "@/store/recomendationStore";
 import { mapActions, mapState } from "pinia";
 import { ref, watch } from "vue";
+import Header from "@/components/Header.vue";
 
 const CHARACTERS_QUERY = gql`
   {
@@ -238,6 +240,7 @@ export default {
     HeroAvatar,
     EnemyPick,
     RecomendationPick,
+    Header,
   },
   setup() {
     const { result: result, loading, error } = useQuery(CHARACTERS_QUERY);
