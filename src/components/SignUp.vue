@@ -16,6 +16,8 @@
 </template>
 <script>
 import axios from "axios";
+import VueCookies from "vue-cookies";
+const md5 = require("md5");
 export default {
   name: "SignUp",
   data() {
@@ -34,19 +36,21 @@ export default {
       });
       console.log(signUpResult);
       if (signUpResult.status == 201) {
-        localStorage.setItem("user-info", JSON.stringify(signUpResult.data));
+        //localStorage.setItem("user-info", JSON.stringify(signUpResult.data));
+        VueCookies.set("krobelus_login", signUpResult.data.name, "1h");
+        VueCookies.set("krobelus_pass", md5(signUpResult.data.password, "1h"));
         this.$router.push({ name: "HeroList" });
       } else {
         alert("Some error please contact admin");
       }
     },
   },
-  mounted() {
-    let user = localStorage.getItem("user-info");
-    if (user) {
-      this.$router.push({ name: "HeroList" });
-    }
-  },
+  // mounted() {
+  //   let user = localStorage.getItem("user-info");
+  //   if (user) {
+  //     this.$router.push({ name: "HeroList" });
+  //   }
+  // },
 };
 </script>
 

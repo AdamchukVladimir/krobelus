@@ -3,21 +3,31 @@
     <a href="#">Home</a>
     <a href="#">dash</a>
     <a href="#">stats</a>
-    <a v-on:click="fLoginLogout" href="#">{{ loginLogout }} </a>
+    <a v-show="fGetUserAuthentication" @click="fLogout">Logout</a>
+    <a v-show="!fGetUserAuthentication" @click="fLogout">Login</a>
     <div class="dot"></div>
   </nav>
 </template>
 <script>
+import VueCookies from "vue-cookies";
+
 export default {
   name: "Header",
   methods: {
-    fLoginLogout() {
+    fLogin() {
+      /*
       let user = localStorage.getItem("user-info");
       if (user) {
         localStorage.removeItem("user-info");
       } else {
         this.$router.push({ name: "Login" });
       }
+      */
+      this.$router.push({ path: "/login" });
+    },
+    fLogout() {
+      VueCookies.remove("krobelus_login");
+      VueCookies.remove("krobelus_pass");
     },
   },
   computed: {
@@ -26,6 +36,14 @@ export default {
       if (user) {
         return "Logout";
       } else return "Login";
+    },
+    fGetUserAuthentication() {
+      if (VueCookies.get("krobelus_login") && VueCookies.get("krobelus_pass")) {
+        console.log("fGetUserAuthentication - true");
+        return true;
+      }
+      console.log("fGetUserAuthentication - false");
+      return false;
     },
   },
 };

@@ -1,45 +1,63 @@
 {
-    "users": [
-        {
-            "name": "vladimir",
-            "email": "vladimir@mail.com",
-            "password": "123ewewqeq"
-        },
-        {
-            "name": "ruslan",
-            "email": "ruslan@email.com",
-            "password": "1234qwerty",
-            "id": 1
-        },
-        {
-            "name": "rus3lan",
-            "email": "ruslan@email.com",
-            "password": "1234qwerty",
-            "id": 2
-        },
-        {
-            "name": "dimas",
-            "email": "dimas@mail.com",
-            "password": "dimas_raskolbas",
-            "id": 3
-        },
-        {
-            "name": "gamadril",
-            "email": "gamadril@mail.com",
-            "password": "123445rtreter",
-            "id": 4
-        },
-        {
-            "name": "toxic",
-            "email": "toxic@gmail.com",
-            "password": "123",
-            "id": 5
-        },
-        {
-            "name": "pudge",
-            "email": "pudge@mail.com",
-            "password": "pudgeBest",
-            "id": 6
-        }
-    ]
+  "users": [
+    {
+      "name": "vladimir",
+      "email": "vladimir@mail.com",
+      "password": "123ewewqeq"
+    },
+    {
+      "name": "ruslan",
+      "email": "ruslan@email.com",
+      "password": "1234qwerty",
+      "id": 1
+    },
+    {
+      "name": "rus3lan",
+      "email": "ruslan@email.com",
+      "password": "1234qwerty",
+      "id": 2
+    },
+    {
+      "name": "dimas",
+      "email": "dimas@mail.com",
+      "password": "dimas_raskolbas",
+      "id": 3
+    },
+    {
+      "name": "gamadril",
+      "email": "gamadril@mail.com",
+      "password": "123445rtreter",
+      "id": 4
+    },
+    {
+      "name": "toxic",
+      "email": "toxic@gmail.com",
+      "password": "123",
+      "id": 5
+    },
+    {
+      "name": "pudge",
+      "email": "pudge@mail.com",
+      "password": "pudgeBest",
+      "id": 6
+    },
+    {
+      "name": "murad",
+      "email": "murad@email.com",
+      "password": "murad123",
+      "id": 7
+    },
+    {
+      "name": "ogre",
+      "email": "ogre@mail.com",
+      "password": "556df",
+      "id": 8
+    },
+    {
+      "name": "gamarjoba",
+      "email": "gamarjoba@test.com",
+      "password": "45nklfd",
+      "id": 9
+    }
+  ]
 }

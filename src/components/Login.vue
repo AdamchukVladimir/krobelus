@@ -16,7 +16,8 @@
 
 <script>
 import axios from "axios";
-import Header from "@/components/Header.vue";
+import VueCookies from "vue-cookies";
+const md5 = require("md5");
 export default {
   name: "Login",
   data() {
@@ -31,7 +32,12 @@ export default {
         `http://localhost:3000/users?name=${this.name}&password=${this.password}`
       );
       if (loginResult.status == 200 && loginResult.data.length > 0) {
-        localStorage.setItem("user-info", JSON.stringify(loginResult.data[0]));
+        //localStorage.setItem("user-info", JSON.stringify(loginResult.data[0]));
+        VueCookies.set("krobelus_login", loginResult.data[0].name, "1h");
+        VueCookies.set(
+          "krobelus_pass",
+          md5(loginResult.data[0].password, "1h")
+        );
         this.$router.push({ name: "HeroList" });
       } else {
         alert("Some error please contact admin");
@@ -40,10 +46,12 @@ export default {
     },
   },
   mounted() {
+    /*
     let user = localStorage.getItem("user-info");
     if (user) {
       this.$router.push({ name: "HeroList" });
     }
+    */
   },
 };
 </script>
