@@ -24,8 +24,8 @@ export default {
       type: Number,
       required: true,
     },
-    enemyObject: {
-      type: Object,
+    enemyNumber: {
+      type: Number,
       required: true,
     },
     oEnemy: {
@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     enemyHeroImage() {
-      return `https://raw.githubusercontent.com/AdamchukVladimir/krobelus/master/src/assets/hero_img/${this.enemyObject}.png`;
+      return `https://raw.githubusercontent.com/AdamchukVladimir/krobelus/master/src/assets/hero_img/${this.enemyNumber}.png`;
     },
     classHeroPick() {
       return `enemyHero ${this.oEnemy.activity}`;
@@ -52,7 +52,7 @@ export default {
       console.log("enemyClear");
       var clearEnemyObject = {
         EnemyClearId: this.enemyId,
-        EnemyClearPickId: this.enemyObject,
+        EnemyClearPickId: this.enemyNumber,
       };
       this.$emit("enemyClear", clearEnemyObject);
     },

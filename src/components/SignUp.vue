@@ -17,6 +17,8 @@
 <script>
 import axios from "axios";
 import VueCookies from "vue-cookies";
+import { mapActions, mapState } from "pinia";
+import { useUsersStore } from "@/store/usersStore";
 const md5 = require("md5");
 export default {
   name: "SignUp",
@@ -28,6 +30,9 @@ export default {
     };
   },
   methods: {
+    ...mapActions(useUsersStore, {
+      signinStore: "signin",
+    }),
     async signUp() {
       let signUpResult = await axios.post("http://localhost:3000/users", {
         name: this.name,
@@ -38,7 +43,11 @@ export default {
       if (signUpResult.status == 201) {
         //localStorage.setItem("user-info", JSON.stringify(signUpResult.data));
         VueCookies.set("krobelus_login", signUpResult.data.name, "1h");
-        VueCookies.set("krobelus_pass", md5(signUpResult.data.password, "1h"));
+        VueCookies.set("krobelus_pass", md5(signUpResult.data.password), "1h");
+        this.signinStore(
+          loginResult.data[0].name,
+          md5(loginResult.data[0].password)
+        );
         this.$router.push({ name: "HeroList" });
       } else {
         alert("Some error please contact admin");

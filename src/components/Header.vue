@@ -3,48 +3,76 @@
     <a href="#">Home</a>
     <a href="#">dash</a>
     <a href="#">stats</a>
-    <a v-show="fGetUserAuthentication" @click="fLogout">Logout</a>
-    <a v-show="!fGetUserAuthentication" @click="fLogout">Login</a>
+    <a href="#" v-show="fGetUserAuthentication" @click="fLogout">Logout</a>
+    <a href="#" v-show="!fGetUserAuthentication" @click="fLogin">Login</a>
     <div class="dot"></div>
   </nav>
 </template>
 <script>
 import VueCookies from "vue-cookies";
+import { ref, watchEffect, reactive } from "vue";
+import { mapActions, mapState } from "pinia";
+import { useUsersStore } from "@/store/usersStore";
 
 export default {
   name: "Header",
-  methods: {
-    fLogin() {
-      /*
-      let user = localStorage.getItem("user-info");
-      if (user) {
-        localStorage.removeItem("user-info");
-      } else {
-        this.$router.push({ name: "Login" });
+  setup() {
+    const krobelus_login = ref(VueCookies.get("krobelus_login"));
+    const state = reactive({
+      cookieValue: null,
+    });
+    watchEffect(() => {
+      const cookieValue = VueCookies.get("krobelus_login");
+      console.log("krobelus_login " + cookieValue);
+      if (cookieValue === undefined) {
+        console.log("Cookie has been deleted!");
       }
-      */
+      state.cookieValue = cookieValue;
+    });
+    return {
+      krobelus_login,
+    };
+  },
+  methods: {
+    ...mapActions(useUsersStore, {
+      signinStore: "signin",
+      signoutStore: "signout",
+    }),
+    fLogin() {
       this.$router.push({ path: "/login" });
     },
     fLogout() {
       VueCookies.remove("krobelus_login");
       VueCookies.remove("krobelus_pass");
+      this.signoutStore();
     },
   },
   computed: {
-    loginLogout() {
-      let user = localStorage.getItem("user-info");
-      if (user) {
-        return "Logout";
-      } else return "Login";
+    ...mapState(useUsersStore, {
+      getUserlogin: "userlogin",
+    }),
+    fAutoSignin() {
+      if (
+        VueCookies.isKey("krobelus_login") &&
+        VueCookies.isKey("krobelus_pass")
+      ) {
+        this.signinStore(
+          VueCookies.get("krobelus_login"),
+          VueCookies.get("krobelus_pass")
+        );
+      }
     },
     fGetUserAuthentication() {
-      if (VueCookies.get("krobelus_login") && VueCookies.get("krobelus_pass")) {
+      if (this.getUserlogin) {
         console.log("fGetUserAuthentication - true");
         return true;
       }
       console.log("fGetUserAuthentication - false");
       return false;
     },
+  },
+  mounted() {
+    this.fAutoSignin;
   },
 };
 </script>

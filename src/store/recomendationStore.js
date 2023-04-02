@@ -31,7 +31,6 @@ const VERSUS_QUERY = gql`
 function changeIDvariablesVersus(id, variablesName) {
   console.log("ids= " + id);
   console.log("week= " + new Date.now());
-  //let week = new Date.now();console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);console.log("week= " + week);
   
   variablesName.value = {
     id,
@@ -167,15 +166,6 @@ export const useRecomendationStore = defineStore('RecomendationStore', {
             console.log("resultVersus5 " + JSON.stringify(this.versusHero5.heroStats.matchUp[0].vs[0]));
           }, "2000");
         },                                
-        getDefaultQuery(){
-            changeIDvariablesVersus(50,variablesVersus);
-            setTimeout(() => {
-              this.recomendationHeroes = resultVersus;
-              console.log("this.recomendationHeroes " + JSON.stringify(this.recomendationHeroes.heroStats.matchUp[0].vs[0]));
-              console.log("this.recomendationHeroes1 " + this.recomendationHeroes);
-            }, "2000");
-            
-        },
         async getDefaultHeroes(heroes){
             //this.recomendationHeroes = heroes
             console.log("state " + heroes.constants.heroes[1].id);

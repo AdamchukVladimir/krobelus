@@ -13,14 +13,14 @@
         @getEnemy="getEnemyParams"
         @enemyClear="enemyClear"
         :oEnemy="oEnemy1"
-        :enemyObject="enemy1heroId"
+        :enemyNumber="enemy1heroId"
         :enemyId="1"
       />
       <EnemyPick
         @getEnemy="getEnemyParams"
         @enemyClear="enemyClear"
         :oEnemy="oEnemy2"
-        :enemyObject="enemy2heroId"
+        :enemyNumber="enemy2heroId"
         :enemyId="2"
       />
 
@@ -28,21 +28,21 @@
         @getEnemy="getEnemyParams"
         @enemyClear="enemyClear"
         :oEnemy="oEnemy3"
-        :enemyObject="enemy3heroId"
+        :enemyNumber="enemy3heroId"
         :enemyId="3"
       />
       <EnemyPick
         @getEnemy="getEnemyParams"
         @enemyClear="enemyClear"
         :oEnemy="oEnemy4"
-        :enemyObject="enemy4heroId"
+        :enemyNumber="enemy4heroId"
         :enemyId="4"
       />
       <EnemyPick
         @getEnemy="getEnemyParams"
         @enemyClear="enemyClear"
         :oEnemy="oEnemy5"
-        :enemyObject="enemy5heroId"
+        :enemyNumber="enemy5heroId"
         :enemyId="5"
       />
     </div>
@@ -214,25 +214,6 @@ const CHARACTERS_QUERY = gql`
     }
   }
 `;
-const VERSUS_QUERY = gql`
-  query getHeroesById($id: Short!, $week: Short!) {
-    heroStats {
-      matchUp(heroId: $id, week: $week, take: 124) {
-        vs {
-          heroId1
-          heroId2
-          week
-          matchCount
-          winCount
-          winRateHeroId1
-          winRateHeroId2
-          synergy
-          winsAverage
-        }
-      }
-    }
-  }
-`;
 
 export default {
   name: "HeroList",
@@ -321,23 +302,25 @@ export default {
           },
         ],
       };
+      if (this.result) {
+        for (let i = 0; i < this.result.constants.heroes.length; i++) {
+          oMainResultVersus.heroesVersus.push({
+            heroId2: this.result.constants.heroes[i].id,
+            matchCount: 0,
+            winCount: 0,
+            winRateHeroId1: 0,
+            winRateHeroId2: 0,
+            synergy: 0,
+            advantage: 0,
+            winsAverage: 0,
+            activity: true,
+            imgId: this.result.constants.heroes[i].id,
+          });
 
-      for (let i = 0; i < this.result.constants.heroes.length; i++) {
-        oMainResultVersus.heroesVersus.push({
-          heroId2: this.result.constants.heroes[i].id,
-          matchCount: 0,
-          winCount: 0,
-          winRateHeroId1: 0,
-          winRateHeroId2: 0,
-          synergy: 0,
-          advantage: 0,
-          winsAverage: 0,
-          activity: true,
-          imgId: this.result.constants.heroes[i].id,
-        });
-
-        //console.log("oMainResultVersus " + JSON.stringify(oMainResultVersus));
+          //console.log("oMainResultVersus " + JSON.stringify(oMainResultVersus));
+        }
       }
+
       //Общая функция для versus Heroes если не false заполняет объект oMainResultVersus
       for (let k = 0; k < aVersusheroes.length; k++) {
         if (aVersusheroes[k] == false) {
@@ -446,22 +429,25 @@ export default {
           },
         ],
       };
-      for (let i = 0; i < this.result.constants.heroes.length; i++) {
-        console.log("mainResult");
-        oMainResult.heroes.push({
-          id: this.result.constants.heroes[i].id,
-          primaryAttribute:
-            this.result.constants.heroes[i].stats.primaryAttribute,
-          nameFull: this.result.constants.heroes[i].name,
-          displayName: this.result.constants.heroes[i].displayName,
-          shortName: this.result.constants.heroes[i].shortName,
-          aliases: this.result.constants.heroes[i].aliases,
-          roleId: this.result.constants.heroes[i].roles.roleId,
-          roleLevel: this.result.constants.heroes[i].roles.level,
-          imgId: this.result.constants.heroes[i].id,
-          activity: "active",
-        });
+      if (this.result) {
+        for (let i = 0; i < this.result.constants.heroes.length; i++) {
+          console.log("mainResult ");
+          oMainResult.heroes.push({
+            id: this.result.constants.heroes[i].id,
+            primaryAttribute:
+              this.result.constants.heroes[i].stats.primaryAttribute,
+            nameFull: this.result.constants.heroes[i].name,
+            displayName: this.result.constants.heroes[i].displayName,
+            shortName: this.result.constants.heroes[i].shortName,
+            aliases: this.result.constants.heroes[i].aliases,
+            roleId: this.result.constants.heroes[i].roles.roleId,
+            roleLevel: this.result.constants.heroes[i].roles.level,
+            imgId: this.result.constants.heroes[i].id,
+            activity: "active",
+          });
+        }
       }
+
       oMainResult.heroes.sort((a, b) =>
         a.displayName > b.displayName ? 1 : -1
       );
