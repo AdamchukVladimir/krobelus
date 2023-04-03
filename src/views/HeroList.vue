@@ -461,8 +461,6 @@ export default {
   methods: {
     ...mapActions(useUserStore, { singinStore: "singin" }),
     ...mapActions(useRecomendationStore, {
-      getDefaultHeroesStore: "getDefaultHeroes",
-      getDefaultQueryStore: "getDefaultQuery",
       getVersus1Store: "getVersus1",
       getVersus2Store: "getVersus2",
       getVersus3Store: "getVersus3",

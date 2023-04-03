@@ -1,46 +1,28 @@
 <template>
   <nav class="navMenu">
-    <a href="#">Home</a>
-    <a href="#">dash</a>
-    <a href="#">stats</a>
+    <router-link :to="{ name: 'Dashboard' }">Home</router-link>
+    <router-link :to="{ name: 'Dashboard' }">Dash</router-link>
+    <router-link :to="{ name: 'Dashboard' }">Stats</router-link>
     <a href="#" v-show="fGetUserAuthentication" @click="fLogout">Logout</a>
-    <a href="#" v-show="!fGetUserAuthentication" @click="fLogin">Login</a>
+    <router-link :to="{ name: 'Dashboard' }" v-show="!fGetUserAuthentication"
+      >Login</router-link
+    >
+
     <div class="dot"></div>
   </nav>
 </template>
 <script>
 import VueCookies from "vue-cookies";
-import { ref, watchEffect, reactive } from "vue";
 import { mapActions, mapState } from "pinia";
 import { useUsersStore } from "@/store/usersStore";
 
 export default {
   name: "Header",
-  setup() {
-    const krobelus_login = ref(VueCookies.get("krobelus_login"));
-    const state = reactive({
-      cookieValue: null,
-    });
-    watchEffect(() => {
-      const cookieValue = VueCookies.get("krobelus_login");
-      console.log("krobelus_login " + cookieValue);
-      if (cookieValue === undefined) {
-        console.log("Cookie has been deleted!");
-      }
-      state.cookieValue = cookieValue;
-    });
-    return {
-      krobelus_login,
-    };
-  },
   methods: {
     ...mapActions(useUsersStore, {
       signinStore: "signin",
       signoutStore: "signout",
     }),
-    fLogin() {
-      this.$router.push({ path: "/login" });
-    },
     fLogout() {
       VueCookies.remove("krobelus_login");
       VueCookies.remove("krobelus_pass");

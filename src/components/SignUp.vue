@@ -10,7 +10,7 @@
     <input type="password" v-model="password" placeholder="Enter Password" />
     <button v-on:click="signUp">Sign Up</button>
     <p>
-      <router-link to="/login"> Login</router-link>
+      <router-link to="login"> Login</router-link>
     </p>
   </div>
 </template>

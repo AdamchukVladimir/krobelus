@@ -7,9 +7,9 @@
   <div class="loginField">
     <input type="text" v-model="name" placeholder="Enter Login" />
     <input type="password" v-model="password" placeholder="Enter Password" />
-    <button v-on:click="login">Log In</button>
+    <button v-on:click="login" @keyup.enter="login">Log In</button>
     <p>
-      <router-link to="/signup"> Sign Up</router-link>
+      <router-link to="signup"> Sign Up</router-link>
     </p>
   </div>
 </template>

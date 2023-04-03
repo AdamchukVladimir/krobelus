@@ -28,26 +28,12 @@ const VERSUS_QUERY = gql`
   }
 `;
 
-function changeIDvariablesVersus(id, variablesName) {
-  console.log("ids= " + id);
-  console.log("week= " + new Date.now());
-  
-  variablesName.value = {
-    id,
-    
-  };
-}
-
 provideApolloClient(apolloClient);
-const { result: resultVersus, variables: variablesVersus } = useQuery(
-    VERSUS_QUERY,
-    {}
-  );
-const { result: resultVersus1, variables: variablesVersus1 } = useQuery(VERSUS_QUERY,{});
-const { result: resultVersus2, variables: variablesVersus2 } = useQuery(VERSUS_QUERY,{});
-const { result: resultVersus3, variables: variablesVersus3 } = useQuery(VERSUS_QUERY,{});
-const { result: resultVersus4, variables: variablesVersus4 } = useQuery(VERSUS_QUERY,{});
-const { result: resultVersus5, variables: variablesVersus5 } = useQuery(VERSUS_QUERY,{});
+// const { result: resultVersus1, variables: variablesVersus1 } = useQuery(VERSUS_QUERY,{});
+// const { result: resultVersus2, variables: variablesVersus2 } = useQuery(VERSUS_QUERY,{});
+// const { result: resultVersus3, variables: variablesVersus3 } = useQuery(VERSUS_QUERY,{});
+// const { result: resultVersus4, variables: variablesVersus4 } = useQuery(VERSUS_QUERY,{});
+// const { result: resultVersus5, variables: variablesVersus5 } = useQuery(VERSUS_QUERY,{});
 export const useRecomendationStore = defineStore('RecomendationStore', {
     state: () => ({
         recomendationHeroes:{
@@ -99,28 +85,21 @@ export const useRecomendationStore = defineStore('RecomendationStore', {
           //let week = 1679165814;
           let week = parseInt(new Date().getTime()/1000);
           console.log("week= " + parseInt(new Date().getTime()/1000));
+          const { result: resultVersus1, variables: variablesVersus1 } = useQuery(VERSUS_QUERY,{});
           variablesVersus1.value = {
             id,
             week,
           };
+          
           setTimeout(() => {
-            // console.log("RAW resultVersus1 " + JSON.stringify(resultVersus1));
-            // console.log("RAW resultVersus1 " + JSON.stringify(resultVersus1._rawValue.heroStats.matchUp[0].vs[0]));
-             this.versusHero1 = resultVersus1._rawValue;
-             this.testState = "test";
-            //  console.log(" this.versusHero1 " +  this.versusHero1);
-            //  console.log("resultVersus1 " + JSON.stringify(this.versusHero1.heroStats.matchUp[0].vs[0]));
-            //  console.log("testState " + JSON.stringify(this.testState));
-            //  console.log("clear resultVersus1 2" + JSON.stringify(resultVersus1._rawValue));
-            //  console.log("clear resultVersus1 bool2 " + (typeof resultVersus1._rawValue == "undefined"));
-            //  console.log("clear resultVersus1 bool2 x " + (!resultVersus1._rawValue));
-             //this.versusHero1 = "test2";
+            this.versusHero1 = resultVersus1._rawValue;
           }, "1000");
            
         },
         getVersus2(id){
           console.log("id= " + id);
           let week = parseInt(new Date().getTime()/1000);
+          const { result: resultVersus2, variables: variablesVersus2 } = useQuery(VERSUS_QUERY,{});
           variablesVersus2.value = {
             id,
             week,
@@ -133,6 +112,7 @@ export const useRecomendationStore = defineStore('RecomendationStore', {
         getVersus3(id){
           console.log("id= " + id);
           let week = parseInt(new Date().getTime()/1000);
+          const { result: resultVersus3, variables: variablesVersus3 } = useQuery(VERSUS_QUERY,{});
           variablesVersus3.value = {
             id,
             week,
@@ -145,6 +125,7 @@ export const useRecomendationStore = defineStore('RecomendationStore', {
         getVersus4(id){
           console.log("id= " + id);
           let week = parseInt(new Date().getTime()/1000);
+          const { result: resultVersus4, variables: variablesVersus4 } = useQuery(VERSUS_QUERY,{});
           variablesVersus4.value = {
             id,
             week,
@@ -157,6 +138,7 @@ export const useRecomendationStore = defineStore('RecomendationStore', {
         getVersus5(id){
           console.log("id= " + id);
           let week = parseInt(new Date().getTime()/1000);
+          const { result: resultVersus5, variables: variablesVersus5 } = useQuery(VERSUS_QUERY,{});
           variablesVersus5.value = {
             id,
             week,
@@ -166,19 +148,5 @@ export const useRecomendationStore = defineStore('RecomendationStore', {
             console.log("resultVersus5 " + JSON.stringify(this.versusHero5.heroStats.matchUp[0].vs[0]));
           }, "2000");
         },                                
-        async getDefaultHeroes(heroes){
-            //this.recomendationHeroes = heroes
-            console.log("state " + heroes.constants.heroes[1].id);
-            
-            for (let i = 0; i < heroes.constants.heroes.length; i++) {
-                this.recomendationHeroes.heroes.push({
-                  id: heroes.constants.heroes[i].id,
-                  vsSynergy: 0,
-                  withSnergy: 0
-                });
-            }
-            console.log("this.recomendationHeroes " + this.recomendationHeroes.heroes[112].id);
-            console.log("this.recomendationHeroes synergy vs" + this.recomendationHeroes.heroes[112].vsSynergy);
-        }
     }
 });
