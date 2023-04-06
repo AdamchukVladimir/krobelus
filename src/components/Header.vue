@@ -1,6 +1,6 @@
 <template>
   <nav class="navMenu">
-    <router-link :to="{ name: 'Dashboard' }">Home</router-link>
+    <router-link :to="{ name: 'HeroList' }">Home</router-link>
     <router-link :to="{ name: 'Dashboard' }">Dash</router-link>
     <router-link :to="{ name: 'Dashboard' }">Stats</router-link>
     <a href="#" v-show="fGetUserAuthentication" @click="fLogout">Logout</a>

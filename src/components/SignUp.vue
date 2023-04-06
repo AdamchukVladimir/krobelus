@@ -35,18 +35,20 @@ export default {
     }),
     async signUp() {
       let signUpResult = await axios.post("http://localhost:3000/users", {
-        name: this.name,
+        //let signUpResult = await axios.post("http://localhost:5000/api/users", {
+        login: this.name,
         email: this.email,
         password: this.password,
       });
-      console.log(signUpResult);
+      console.log("signUpResult " + JSON.stringify(signUpResult));
       if (signUpResult.status == 201) {
         //localStorage.setItem("user-info", JSON.stringify(signUpResult.data));
         VueCookies.set("krobelus_login", signUpResult.data.name, "1h");
         VueCookies.set("krobelus_pass", md5(signUpResult.data.password), "1h");
+
         this.signinStore(
-          loginResult.data[0].name,
-          md5(loginResult.data[0].password)
+          signUpResult.data.name,
+          md5(signUpResult.data.password)
         );
         this.$router.push({ name: "HeroList" });
       } else {
