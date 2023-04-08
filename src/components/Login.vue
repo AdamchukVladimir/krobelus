@@ -5,9 +5,9 @@
   />
   <h1>Log In</h1>
   <div class="loginField">
-    <input type="text" v-model="name" placeholder="Enter Login" />
+    <input type="text" v-model="login" placeholder="Enter Login" />
     <input type="password" v-model="password" placeholder="Enter Password" />
-    <button v-on:click="login" @keyup.enter="login">Log In</button>
+    <button v-on:click="fLogin" @keyup.enter="fLogin">Log In</button>
     <p>
       <router-link to="signup"> Sign Up</router-link>
     </p>
@@ -24,7 +24,7 @@ export default {
   name: "Login",
   data() {
     return {
-      name: "",
+      login: "",
       password: "",
     };
   },
@@ -32,21 +32,25 @@ export default {
     ...mapActions(useUsersStore, {
       signinStore: "signin",
     }),
-    async login() {
-      let loginResult = await axios.get(
-        `http://localhost:3000/users?name=${this.name}&password=${this.password}`
+    async fLogin() {
+      // let loginResult = await axios.get(
+      //   `http://localhost:3000/users?name=${this.name}&password=${this.password}`
+      // );
+      let loginResult = await axios.post(
+        "http://localhost:5000/api/users/login",
+        {
+          login: this.login,
+          password: md5(this.password),
+        }
       );
-      if (loginResult.status == 200 && loginResult.data.length > 0) {
+      if (loginResult.status == 200 && loginResult.data) {
+        console.log("Good loginResult " + JSON.stringify(loginResult.data));
         //localStorage.setItem("user-info", JSON.stringify(loginResult.data[0]));
-        VueCookies.set("krobelus_login", loginResult.data[0].name, "1h");
-        VueCookies.set(
-          "krobelus_pass",
-          md5(loginResult.data[0].password),
-          "1h"
-        );
+        VueCookies.set("krobelus_login", loginResult.data.login, "1h");
+        VueCookies.set("krobelus_pass", loginResult.data.password, "1h");
         this.signinStore(
-          loginResult.data[0].name,
-          md5(loginResult.data[0].password)
+          loginResult.data.login,
+          md5(loginResult.data.password)
         );
         this.$router.push({ name: "HeroList" });
       } else {
@@ -54,14 +58,6 @@ export default {
       }
       console.log(loginResult);
     },
-  },
-  mounted() {
-    /*
-    let user = localStorage.getItem("user-info");
-    if (user) {
-      this.$router.push({ name: "HeroList" });
-    }
-    */
   },
 };
 </script>

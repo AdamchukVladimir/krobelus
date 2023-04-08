@@ -5,7 +5,7 @@
   />
   <h1>Sign Up</h1>
   <div class="signupField">
-    <input type="text" v-model="name" placeholder="Enter Login" />
+    <input type="text" v-model="login" placeholder="Enter Login" />
     <input type="text" v-model="email" placeholder="Enter Email" />
     <input type="password" v-model="password" placeholder="Enter Password" />
     <button v-on:click="signUp">Sign Up</button>
@@ -24,7 +24,7 @@ export default {
   name: "SignUp",
   data() {
     return {
-      name: "",
+      login: "",
       email: "",
       password: "",
     };
@@ -34,34 +34,25 @@ export default {
       signinStore: "signin",
     }),
     async signUp() {
-      let signUpResult = await axios.post("http://localhost:3000/users", {
-        //let signUpResult = await axios.post("http://localhost:5000/api/users", {
-        login: this.name,
+      //let signUpResult = await axios.post("http://localhost:3000/users", {
+      let signUpResult = await axios.post("http://localhost:5000/api/users", {
+        login: this.login,
         email: this.email,
         password: this.password,
       });
       console.log("signUpResult " + JSON.stringify(signUpResult));
-      if (signUpResult.status == 201) {
+      if (signUpResult.status == 200) {
         //localStorage.setItem("user-info", JSON.stringify(signUpResult.data));
-        VueCookies.set("krobelus_login", signUpResult.data.name, "1h");
-        VueCookies.set("krobelus_pass", md5(signUpResult.data.password), "1h");
+        VueCookies.set("krobelus_login", signUpResult.data.login, "1h");
+        VueCookies.set("krobelus_pass", signUpResult.data.password, "1h");
 
-        this.signinStore(
-          signUpResult.data.name,
-          md5(signUpResult.data.password)
-        );
+        this.signinStore(signUpResult.data.login, signUpResult.data.password);
         this.$router.push({ name: "HeroList" });
       } else {
         alert("Some error please contact admin");
       }
     },
   },
-  // mounted() {
-  //   let user = localStorage.getItem("user-info");
-  //   if (user) {
-  //     this.$router.push({ name: "HeroList" });
-  //   }
-  // },
 };
 </script>
 
