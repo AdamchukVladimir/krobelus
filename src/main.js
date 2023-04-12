@@ -5,7 +5,8 @@ import { createPinia } from 'pinia';
 import App from './App.vue';
 import router from "./router";
 //import store from "./store";
-import apolloClient from '@/api/ApolloClientGraphQL.js'
+import apolloClient from '@/api/ApolloClientGraphQL.js';
+
 //import pinia from "@/stores/store.js";
 
 // const apolloProvider = createApolloProvider({

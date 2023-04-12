@@ -188,7 +188,7 @@ import { useQuery } from "@vue/apollo-composable";
 import HeroAvatar from "@/components/HeroAvatar.vue";
 import EnemyPick from "@/components/EnemyPick.vue";
 import RecomendationPick from "@/components/RecomendationPick.vue";
-import { useUserStore } from "@/store/userStore";
+import { useUsersStore } from "@/store/usersStore";
 import { useRecomendationStore } from "@/store/recomendationStore";
 import { mapActions, mapState } from "pinia";
 import { ref, watch } from "vue";
@@ -259,7 +259,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useUserStore, { doubleH: "my", loginStore: "userlogin" }),
+    ...mapState(useUsersStore, { userloginStore: "userlogin" }),
     ...mapState(useRecomendationStore, {
       getVersusHero1: "getVersusHero1",
       getVersusHero2: "getVersusHero2",
@@ -459,7 +459,7 @@ export default {
   // },
 
   methods: {
-    ...mapActions(useUserStore, { singinStore: "singin" }),
+    ...mapActions(useUsersStore, { singinStore: "singin" }),
     ...mapActions(useRecomendationStore, {
       getVersus1Store: "getVersus1",
       getVersus2Store: "getVersus2",
@@ -571,6 +571,10 @@ export default {
         this.clearOneVersusStateStore(this.currentEnemy); // Обнуляет Store указанного героя в Pinia
       }
     },
+  },
+  mounted() {
+    console.log("req from back " + this.$req);
+    console.log("req user stor " + this.userloginStore);
   },
 };
 </script>

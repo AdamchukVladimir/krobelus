@@ -11,6 +11,7 @@
     <p>
       <router-link to="signup"> Sign Up</router-link>
     </p>
+    <a href="http://localhost:5000/api/auth/steam">Sign in Steam</a>
   </div>
 </template>
 
@@ -32,6 +33,12 @@ export default {
     ...mapActions(useUsersStore, {
       signinStore: "signin",
     }),
+    async fLoginSteam() {
+      let loginSteamResult = await axios.get(
+        "http://localhost:5000/api/auth/steam"
+      );
+      console.log("loginSteamResult " + loginSteamResult);
+    },
     async fLogin() {
       // let loginResult = await axios.get(
       //   `http://localhost:3000/users?name=${this.name}&password=${this.password}`
@@ -58,6 +65,11 @@ export default {
       }
       console.log(loginResult);
     },
+  },
+  mounted() {
+    // console.log("req login: " + this.$req);
+    // this.signinStore(this.$req.user, md5(this.$req.user));
+    // VueCookies.set("req_test", this.$req.user, "1h");
   },
 };
 </script>

@@ -55,6 +55,11 @@ export default {
   },
   mounted() {
     this.fAutoSignin;
+    //const jwtToken = VueCookies.get("tokenSteam");
+    console.log("jwtToken " + JSON.stringify(VueCookies.get("tokenSteam")));
+    console.log(
+      "krobelus_pass " + JSON.stringify(VueCookies.get("krobelus_pass"))
+    );
   },
 };
 </script>
