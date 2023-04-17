@@ -7,6 +7,9 @@
     <router-link :to="{ name: 'Dashboard' }" v-show="!fGetUserAuthentication"
       >Login</router-link
     >
+    <router-link :to="{ name: 'Dashboard' }"
+      ><img :src="fAvatarImage" :alt="selectedItem"
+    /></router-link>
 
     <div class="dot"></div>
   </nav>
@@ -22,6 +25,7 @@ export default {
     ...mapActions(useUsersStore, {
       signinStore: "signin",
       signoutStore: "signout",
+      signinSteamStore: "signinSteam",
     }),
     fLogout() {
       VueCookies.remove("krobelus_login");
@@ -32,6 +36,7 @@ export default {
   computed: {
     ...mapState(useUsersStore, {
       getUserlogin: "userlogin",
+      getUserSteamAvatar: "userSteamAvatar",
     }),
     fAutoSignin() {
       if (
@@ -44,6 +49,12 @@ export default {
         );
       }
     },
+    //Автозаход Steam по jWT токену из куки
+    fAutoSigninSteam() {
+      if (VueCookies.get("tokenSteam")) {
+        this.signinSteamStore(VueCookies.get("tokenSteam"));
+      }
+    },
     fGetUserAuthentication() {
       if (this.getUserlogin) {
         console.log("fGetUserAuthentication - true");
@@ -52,14 +63,19 @@ export default {
       console.log("fGetUserAuthentication - false");
       return false;
     },
+    fAvatarImage() {
+      if (this.getUserSteamAvatar) return this.getUserSteamAvatar;
+    },
   },
   mounted() {
     this.fAutoSignin;
+    this.fAutoSigninSteam;
     //const jwtToken = VueCookies.get("tokenSteam");
     console.log("jwtToken " + JSON.stringify(VueCookies.get("tokenSteam")));
     console.log(
       "krobelus_pass " + JSON.stringify(VueCookies.get("krobelus_pass"))
     );
+    console.log("getUserSteamAvatar " + this.getUserSteamAvatar);
   },
 };
 </script>
@@ -75,6 +91,8 @@ export default {
   transform: translate(-50%, -50%);
   margin-bottom: 10px;
   padding-top: 10px;
+  align-items: bottom;
+  justify-content: bottom;
 }
 
 .navMenu a {
@@ -87,10 +105,18 @@ export default {
   width: 80px;
   -webkit-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
-  padding: 5px;
+  padding-left: 5px;
 }
 
 .navMenu a:hover {
   color: #4e6985;
+}
+
+.navMenu a img {
+  width: 25px;
+
+  display: block;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 </style>
