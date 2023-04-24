@@ -30,6 +30,7 @@ export default {
     fLogout() {
       VueCookies.remove("krobelus_login");
       VueCookies.remove("krobelus_pass");
+      VueCookies.remove("tokenSteam");
       this.signoutStore();
     },
   },
@@ -37,6 +38,7 @@ export default {
     ...mapState(useUsersStore, {
       getUserlogin: "userlogin",
       getUserSteamAvatar: "userSteamAvatar",
+      getUserSteamID: "userSteamID",
     }),
     fAutoSignin() {
       if (
@@ -56,7 +58,7 @@ export default {
       }
     },
     fGetUserAuthentication() {
-      if (this.getUserlogin) {
+      if (this.getUserlogin || this.getUserSteamID) {
         console.log("fGetUserAuthentication - true");
         return true;
       }
@@ -76,6 +78,7 @@ export default {
       "krobelus_pass " + JSON.stringify(VueCookies.get("krobelus_pass"))
     );
     console.log("getUserSteamAvatar " + this.getUserSteamAvatar);
+    console.log("getUserSteamID " + this.getUserSteamID);
   },
 };
 </script>
@@ -114,7 +117,7 @@ export default {
 
 .navMenu a img {
   width: 25px;
-
+  padding-left: 20px;
   display: block;
   -webkit-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
