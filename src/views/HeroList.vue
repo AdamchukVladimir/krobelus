@@ -77,6 +77,16 @@
           </div>
         </template>
       </div>
+      <div class="hero all">
+        <template
+          v-for="hero in mainResult.heroes"
+          :key="hero.id + hero.activity"
+        >
+          <div class="heroPick" v-if="hero.primaryAttribute == 'all'">
+            <HeroAvatar @eHeroPick="getHeroId" :heroObj="hero" />
+          </div>
+        </template>
+      </div>
     </div>
     <div class="settings">
       <div class="sorting">
@@ -174,6 +184,9 @@
             </p>
             <p class="recomendation-info">
               {{ (heroVersus.winRateHeroId2 * 100).toFixed(1) }}%
+            </p>
+            <p class="recomendation-info">
+              {{ heroVersus.matchCount }}
             </p>
           </div>
         </template>
@@ -585,6 +598,11 @@ export default {
 }
 .heroesPull {
   grid-area: heroesPull;
+  display: grid;
+  width: auto;
+  margin-bottom: 10px;
+
+  grid-template-columns: 640px 640px;
 }
 
 .recomendationHeroes {
@@ -629,27 +647,29 @@ export default {
   gap: 7px;
   grid-template-columns: 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px;
 }
+
 .str {
   display: grid;
-  width: auto;
-  right: 300px;
   margin-bottom: 25px;
   gap: 7px;
-  grid-template-columns: 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px;
+  grid-template-columns: 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px;
 }
 .agi {
   display: grid;
   margin-bottom: 25px;
   gap: 7px;
-  grid-template-columns: 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px;
+  grid-template-columns: 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px;
 }
 .int {
   display: grid;
   width: auto;
-  margin-left: auto;
-  margin-right: auto;
   gap: 7px;
-  grid-template-columns: 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px;
+  grid-template-columns: 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px;
+}
+.all {
+  display: grid;
+  gap: 7px;
+  grid-template-columns: 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px;
 }
 .color-circle {
   width: 50px;
