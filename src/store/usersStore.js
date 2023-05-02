@@ -2,14 +2,14 @@ import { defineStore } from 'pinia';
 import VueCookies from "vue-cookies";
 import VueJwtDecode from 'vue-jwt-decode';
 import axios from "axios";
-
+const bignumber = require("bignumber.js");
 const jwtTokenSteam = VueCookies.get("tokenSteam");
 let jwtTokenSteamDecode = {};
 let steamUser = {};
 let steamAvatarLink = "";
 
 // Steam 64 to 32
-// bignumber = require("bignumber.js");
+//bignumber = require("bignumber.js");
 // console.log(bignumber('76561197991791363').minus('76561197960265728'))
 
 async function getsteamUser(jwtTokenSteam){
@@ -40,7 +40,8 @@ export const useUsersStore = defineStore('UsersStore', {
     getters: {
         userlogin: (state) =>state.userLogin,
         userSteamAvatar: (state) =>state.steamAvatar,
-        userSteamID: (state) =>state.steamID
+        userSteamID: (state) =>state.steamID,
+        userSteamID32: (state) => new bignumber(state.userSteamID).minus('76561197960265728'),
     },
     actions: {
        async signinSteam(jwtTokenSteam){
@@ -58,6 +59,7 @@ export const useUsersStore = defineStore('UsersStore', {
             this.steamAvatar = steamUserData.data.user.avatarfull;
             this.steamID     = steamUserData.data.user.steamid;
             console.log("steamID " + this.steamID );
+            console.log("steamAvatar " + this.steamAvatar );
         },
         // putSteamID(jwtTokenSteam){
         //     let jwtTokenSteamDecode = VueJwtDecode.decode(jwtTokenSteam);
