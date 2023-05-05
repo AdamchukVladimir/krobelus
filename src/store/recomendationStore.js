@@ -93,7 +93,7 @@ export const useRecomendationStore = defineStore('RecomendationStore', {
           
           setTimeout(() => {
             this.versusHero1 = resultVersus1._rawValue;
-          }, "1000");
+          }, "2000");
            
         },
         getVersus2(id){

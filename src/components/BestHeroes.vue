@@ -1,19 +1,77 @@
 <template>
   <Header />
-  <form>
-    <div class="profile avatar"><img :src="fAvatarImage" /></div>
-    <div class="heroes bestHeoes">
+  <div class="wrapper_profile">
+    <div class="profile_avatar"><img :src="fAvatarImage" /></div>
+    <div class="heroes_bestHeoes">
       <HeroAvatar :heroObj="hero" />
 
       {{ userSteamID32Store }}
+      {{ resultPlayer }}
     </div>
-  </form>
+  </div>
 </template>
 <script>
 import HeroAvatar from "@/components/HeroAvatar.vue";
 import Header from "@/components/Header.vue";
 import { useUsersStore } from "@/store/usersStore";
 import { mapActions, mapState } from "pinia";
+import gql from "graphql-tag";
+import { provideApolloClient, useQuery } from "@vue/apollo-composable";
+import apolloClient from "@/api/ApolloClientGraphQL.js";
+
+const USER_HEROES_QUERY2 = gql`
+  query getPayerByAccoutId($id: Long!) {
+    player(steamAccountId: 243995167) {
+      simpleSummary {
+        matchCount
+        heroes {
+          heroId
+          winCount
+          lossCount
+        }
+      }
+      lastMatchDate
+      matchCount
+      heroesPerformance(request: { orderBy: ASC }, take: 125) {
+        heroId
+        matchCount
+        winCount
+        lastPlayedDateTime
+      }
+    }
+  }
+`;
+const USER_HEROES_QUERY = gql`
+  {
+    player(steamAccountId: 243995167) {
+      simpleSummary {
+        matchCount
+        heroes {
+          heroId
+          winCount
+          lossCount
+        }
+      }
+      lastMatchDate
+      matchCount
+      heroesPerformance(request: { orderBy: ASC }, take: 125) {
+        heroId
+        matchCount
+        winCount
+        lastPlayedDateTime
+      }
+    }
+  }
+`;
+
+// setup() {
+//   const { result: resultPlayer } = useQuery(USER_HEROES_QUERY, {});
+//   return {
+//     resultPlayer,
+//     loading,
+//     error,
+//   };
+// },
 export default {
   name: "BestHeoes",
   components: {
@@ -25,6 +83,10 @@ export default {
       type: Number,
       required: true,
     },
+  },
+  setup() {
+    const { result: resultPlayer } = useQuery(USER_HEROES_QUERY);
+    return resultPlayer;
   },
   data() {
     return {
@@ -51,19 +113,15 @@ export default {
 };
 </script>
 <style>
-.enemy-clear img {
-  position: absolute;
-  margin-top: -85px;
-  margin-left: 10px;
-  width: 20px;
-  height: 20px;
-}
-.enemyHero img {
-  width: 70px;
-  height: 87px;
-  border: 1px solid black;
-}
-.pick img {
-  border: 1px solid rgb(223, 217, 217);
+.wrapper_profile {
+  display: grid;
+  width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  grid-gap: 50px 10px;
+  grid-template-columns: 3fr 4fr;
+  grid-template-areas:
+    "profile_avatar heroes_bestHeoes"
+    "settings recomendationHeroes";
 }
 </style>
