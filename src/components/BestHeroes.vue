@@ -3,8 +3,16 @@
   <div class="wrapper_profile">
     <div class="profile_avatar"><img :src="fAvatarImage" /></div>
     <div class="heroes_bestHeoes">
-      <HeroAvatar :heroObj="hero" />
-
+      <div class="simpleHeroes">
+        <template
+          v-for="hero in fSimpleSummary.Simpleheroes"
+          :key="hero.heroId + hero.winCount"
+        >
+          <div class="simpleHero" v-if="hero.id > 0">
+            <HeroAvatar :heroObj="hero" />
+          </div>
+        </template>
+      </div>
       {{ userSteamID32Store }}
       {{ resultPlayer }}
     </div>
@@ -15,63 +23,7 @@ import HeroAvatar from "@/components/HeroAvatar.vue";
 import Header from "@/components/Header.vue";
 import { useUsersStore } from "@/store/usersStore";
 import { mapActions, mapState } from "pinia";
-import gql from "graphql-tag";
-import { provideApolloClient, useQuery } from "@vue/apollo-composable";
-import apolloClient from "@/api/ApolloClientGraphQL.js";
 
-const USER_HEROES_QUERY2 = gql`
-  query getPayerByAccoutId($id: Long!) {
-    player(steamAccountId: 243995167) {
-      simpleSummary {
-        matchCount
-        heroes {
-          heroId
-          winCount
-          lossCount
-        }
-      }
-      lastMatchDate
-      matchCount
-      heroesPerformance(request: { orderBy: ASC }, take: 125) {
-        heroId
-        matchCount
-        winCount
-        lastPlayedDateTime
-      }
-    }
-  }
-`;
-const USER_HEROES_QUERY = gql`
-  {
-    player(steamAccountId: 243995167) {
-      simpleSummary {
-        matchCount
-        heroes {
-          heroId
-          winCount
-          lossCount
-        }
-      }
-      lastMatchDate
-      matchCount
-      heroesPerformance(request: { orderBy: ASC }, take: 125) {
-        heroId
-        matchCount
-        winCount
-        lastPlayedDateTime
-      }
-    }
-  }
-`;
-
-// setup() {
-//   const { result: resultPlayer } = useQuery(USER_HEROES_QUERY, {});
-//   return {
-//     resultPlayer,
-//     loading,
-//     error,
-//   };
-// },
 export default {
   name: "BestHeoes",
   components: {
@@ -84,31 +36,56 @@ export default {
       required: true,
     },
   },
-  setup() {
-    const { result: resultPlayer } = useQuery(USER_HEROES_QUERY);
-    return resultPlayer;
-  },
   data() {
-    return {
-      EnemyFlag: false,
-      counter: 0,
-      hero: {
-        imgId: 2,
-      },
-    };
+    return {};
   },
   computed: {
     ...mapState(useUsersStore, {
       userSteamID32Store: "userSteamID32",
       userSteamAvatarStore: "userSteamAvatar",
+      userHeroesStore: "userHeroes",
     }),
     fAvatarImage() {
       console.log("userSteamAvatarStore " + this.userSteamAvatarStore);
       if (this.userSteamAvatarStore) return this.userSteamAvatarStore;
     },
+    fSimpleSummary() {
+      let oSimpleSummary = {
+        Simpleheroes: [
+          {
+            id: 0,
+            winCount: 0,
+            lossCount: 0,
+          },
+        ],
+      };
+      if (this.userHeroesStore.player.simpleSummary.heroes) {
+        for (
+          let i = 0;
+          i < this.userHeroesStore.player.simpleSummary.heroes.length;
+          i++
+        ) {
+          console.log("fSimpleSummary ");
+          oSimpleSummary.Simpleheroes.push({
+            id: this.userHeroesStore.player.simpleSummary.heroes[i].heroId,
+            imgId: this.userHeroesStore.player.simpleSummary.heroes[i].heroId,
+            winCount:
+              this.userHeroesStore.player.simpleSummary.heroes[i].winCount,
+            lossCount:
+              this.userHeroesStore.player.simpleSummary.heroes[i].lossCount,
+          });
+        }
+      }
+      console.log("oSimpleSummary " + JSON.stringify(oSimpleSummary));
+      return oSimpleSummary;
+    },
   },
   mounted() {
     console.log("mounteduserSteamAvatarStore " + this.userSteamAvatarStore);
+    console.log(
+      "userHeroesVue " +
+        JSON.stringify(this.userHeroesStore.player.simpleSummary.heroes)
+    );
   },
 };
 </script>

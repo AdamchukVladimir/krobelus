@@ -73,7 +73,8 @@ export const useUsersStore = defineStore('UsersStore', {
         userlogin: (state) =>state.userLogin,
         userSteamAvatar: (state) =>state.steamAvatar,
         userSteamID: (state) =>state.steamID,
-        userSteamID32: (state) => new bignumber(state.steamID).minus('76561197960265728'),
+        userSteamID32: (state) =>state.steamID32,
+        userHeroes: (state) =>state.player,
     },
     actions: {        
        async signinSteam(jwtTokenSteam){
