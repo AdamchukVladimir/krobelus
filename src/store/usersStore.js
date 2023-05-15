@@ -7,9 +7,6 @@ import { provideApolloClient , useQuery } from "@vue/apollo-composable";
 import apolloClient from '@/api/ApolloClientGraphQL.js';
 const bignumber = require("bignumber.js");
 const jwtTokenSteam = VueCookies.get("tokenSteam");
-let jwtTokenSteamDecode = {};
-let steamUser = {};
-let steamAvatarLink = "";
 const USER_HEROES_QUERY = gql`
 query getPlayerById($id: Long!)  {
     player(steamAccountId: $id) {
@@ -35,18 +32,7 @@ query getPlayerById($id: Long!)  {
 provideApolloClient(apolloClient);
 
 
-// Steam 64 to 32
-//bignumber = require("bignumber.js");
-// console.log(bignumber('76561197991791363').minus('76561197960265728'))
-
-
-setTimeout(() => {
-    console.log('Player1 ');
-    //console.log('resultPlayer '+ JSON.stringify(resultPlayer._rawValue));
-    //console.log('resultPlayer1 '+ JSON.stringify(this.player));
-}, "2000");
-
-  const { result: resultPlayer, variables: variablesPlayer } = useQuery(USER_HEROES_QUERY,{});
+const { result: resultPlayer, variables: variablesPlayer } = useQuery(USER_HEROES_QUERY,{});
 
 
 async function getsteamUser(jwtTokenSteam){
@@ -60,6 +46,7 @@ async function getsteamUser(jwtTokenSteam){
     return steamUserData.data.user;   
 }
 
+
 export const useUsersStore = defineStore('UsersStore', {
     state: () => ({
         userLogin: '',
@@ -67,7 +54,8 @@ export const useUsersStore = defineStore('UsersStore', {
         steamID: null,
         steamID32: null,
         steamAvatar: '',
-        player: resultPlayer
+        player: resultPlayer,
+        simpleSummary: '',
     }),
     getters: {
         userlogin: (state) =>state.userLogin,

@@ -206,6 +206,7 @@ import { useRecomendationStore } from "@/store/recomendationStore";
 import { mapActions, mapState } from "pinia";
 import { ref, watch } from "vue";
 import Header from "@/components/Header.vue";
+import { getBestHeroes, getSimpleSummary } from "@/services/PlayerSummary.js";
 
 const CHARACTERS_QUERY = gql`
   {
@@ -588,6 +589,7 @@ export default {
   mounted() {
     console.log("req from back " + this.$req);
     console.log("req user stor " + this.userloginStore);
+    getBestHeroes();
   },
 };
 </script>
