@@ -21,6 +21,26 @@ import { useUsersStore } from "@/store/usersStore";
 
 export default {
   name: "Header",
+  setup() {
+    const store = useUsersStore();
+
+    // store.$watch("player", (newValue, oldValue) => {
+    //   console.log(`myProperty has changed from ${oldValue} to ${newValue}`);
+    // });
+
+    // watch(
+    //   () => store.player,
+    //   (newCount, oldCount) => {
+    //     console.log(`Count changed from ${oldCount} to ${newCount}`);
+    //   }
+    // );
+    return { player1: store.player };
+  },
+  watch: {
+    player1(newCount, oldCount) {
+      console.log(`Count changed from ${oldCount} to ${newCount}`);
+    },
+  },
   methods: {
     ...mapActions(useUsersStore, {
       signinStore: "signin",

@@ -47,7 +47,8 @@ async function getsteamUser(jwtTokenSteam){
 }
 
 
-export const useUsersStore = defineStore('UsersStore', {
+export const useUsersStore = defineStore( {
+    id:'UsersStore',
     state: () => ({
         userLogin: '',
         userPass: '',
@@ -102,3 +103,8 @@ export const useUsersStore = defineStore('UsersStore', {
         }
     }
 });
+
+
+// UsersStore.$watch('player', (newValue, oldValue) => {
+//   console.log(`myProperty has changed from ${oldValue} to ${newValue}`)
+// });
