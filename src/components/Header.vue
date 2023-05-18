@@ -13,34 +13,29 @@
 
     <div class="dot"></div>
   </nav>
+  {{ player1 }}
 </template>
 <script>
 import VueCookies from "vue-cookies";
 import { mapActions, mapState } from "pinia";
 import { useUsersStore } from "@/store/usersStore";
+import { ref, watch } from "vue";
 
 export default {
   name: "Header",
   setup() {
     const store = useUsersStore();
 
-    // store.$watch("player", (newValue, oldValue) => {
-    //   console.log(`myProperty has changed from ${oldValue} to ${newValue}`);
-    // });
-
-    // watch(
-    //   () => store.player,
-    //   (newCount, oldCount) => {
-    //     console.log(`Count changed from ${oldCount} to ${newCount}`);
-    //   }
-    // );
+    //Важно, проверяет, когда изменится значение в pinia state.player
+    watch(
+      () => store.player,
+      (newValue) => {
+        console.log("new Value store " + JSON.stringify(newValue));
+      }
+    );
     return { player1: store.player };
   },
-  watch: {
-    player1(newCount, oldCount) {
-      console.log(`Count changed from ${oldCount} to ${newCount}`);
-    },
-  },
+
   methods: {
     ...mapActions(useUsersStore, {
       signinStore: "signin",
