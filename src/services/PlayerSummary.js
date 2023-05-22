@@ -35,7 +35,7 @@ function getBestHeroes(resultPlayer) {
         });
       }
       oBestheroes.BestHeroes.sort((a, b) =>
-        a.winCount > b.winCount ? 1 : -1
+        a.winCount < b.winCount ? 1 : -1
       );
     }
     return oBestheroes;

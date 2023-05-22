@@ -13,7 +13,6 @@
 
     <div class="dot"></div>
   </nav>
-  {{ player1 }}
 </template>
 <script>
 import VueCookies from "vue-cookies";
@@ -30,7 +29,11 @@ export default {
     watch(
       () => store.player,
       (newValue) => {
-        console.log("new Value store " + JSON.stringify(newValue));
+        console.log(
+          "new Value store " + JSON.stringify(newValue.player.simpleSummary)
+        );
+        store.setSteamBestHeroes;
+        store.setSteamBestHeroes();
       }
     );
     return { player1: store.player };
@@ -41,6 +44,8 @@ export default {
       signinStore: "signin",
       signoutStore: "signout",
       signinSteamStore: "signinSteam",
+      setSimpleSummaryStore: "setSimpleSummary",
+      setSteamBestHeroesStore: "setSteamBestHeroes",
     }),
     fLogout() {
       VueCookies.remove("krobelus_login");

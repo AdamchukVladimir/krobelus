@@ -34,6 +34,7 @@ import HeroAvatar from "@/components/HeroAvatar.vue";
 import Header from "@/components/Header.vue";
 import { useUsersStore } from "@/store/usersStore";
 import { mapActions, mapState } from "pinia";
+import { getBestHeroes, getSimpleSummary } from "@/services/PlayerSummary";
 
 export default {
   name: "BestHeoes",
@@ -60,74 +61,10 @@ export default {
       if (this.userSteamAvatarStore) return this.userSteamAvatarStore;
     },
     fBestheroes() {
-      let oBestheroes = {
-        BestHeroes: [
-          {
-            id: 0,
-            imgId: 0,
-            winCount: 0,
-            lossCount: 0,
-            lastPlayedDateTime: 0,
-            activity: false,
-          },
-        ],
-      };
-      if (this.userHeroesStore.player.heroesPerformance) {
-        for (
-          let i = 0;
-          i < this.userHeroesStore.player.heroesPerformance.length;
-          i++
-        ) {
-          oBestheroes.BestHeroes.push({
-            id: this.userHeroesStore.player.heroesPerformance[i].heroId,
-            imgId: this.userHeroesStore.player.heroesPerformance[i].heroId,
-            winCount: this.userHeroesStore.player.heroesPerformance[i].winCount,
-            lossCount:
-              this.userHeroesStore.player.heroesPerformance[i].lossCount,
-            lastPlayedDateTime:
-              this.userHeroesStore.player.heroesPerformance[i]
-                .lastPlayedDateTime,
-            activity:
-              parseInt(new Date().getTime() / 1000) -
-                this.userHeroesStore.player.heroesPerformance[i]
-                  .lastPlayedDateTime <
-              5259486,
-          });
-        }
-        oBestheroes.BestHeroes.sort((a, b) =>
-          a.winCount > b.winCount ? 1 : -1
-        );
-      }
-      return oBestheroes;
+      return getBestHeroes(this.userHeroesStore);
     },
     fSimpleSummary() {
-      let oSimpleSummary = {
-        Simpleheroes: [
-          {
-            id: 0,
-            winCount: 0,
-            lossCount: 0,
-          },
-        ],
-      };
-      if (this.userHeroesStore.player.simpleSummary.heroes) {
-        for (
-          let i = 0;
-          i < this.userHeroesStore.player.simpleSummary.heroes.length;
-          i++
-        ) {
-          oSimpleSummary.Simpleheroes.push({
-            id: this.userHeroesStore.player.simpleSummary.heroes[i].heroId,
-            imgId: this.userHeroesStore.player.simpleSummary.heroes[i].heroId,
-            winCount:
-              this.userHeroesStore.player.simpleSummary.heroes[i].winCount,
-            lossCount:
-              this.userHeroesStore.player.simpleSummary.heroes[i].lossCount,
-          });
-        }
-      }
-      console.log("oSimpleSummary " + JSON.stringify(oSimpleSummary));
-      return oSimpleSummary;
+      return getSimpleSummary(this.userHeroesStore);
     },
   },
   mounted() {

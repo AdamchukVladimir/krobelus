@@ -5,6 +5,7 @@ import axios from "axios";
 import gql from "graphql-tag";
 import { provideApolloClient , useQuery } from "@vue/apollo-composable";
 import apolloClient from '@/api/ApolloClientGraphQL.js';
+import { getBestHeroes, getSimpleSummary } from "@/services/PlayerSummary";
 const bignumber = require("bignumber.js");
 const jwtTokenSteam = VueCookies.get("tokenSteam");
 const USER_HEROES_QUERY = gql`
@@ -57,6 +58,8 @@ export const useUsersStore = defineStore( {
         steamAvatar: '',
         player: resultPlayer,
         simpleSummary: '',
+        steamBestHeroes: '',
+        top10Heroes: ["top10"],
     }),
     getters: {
         userlogin: (state) =>state.userLogin,
@@ -64,6 +67,9 @@ export const useUsersStore = defineStore( {
         userSteamID: (state) =>state.steamID,
         userSteamID32: (state) =>state.steamID32,
         userHeroes: (state) =>state.player,
+        userSimpleSummary: (state) =>state.simpleSummary,
+        userSteamBestHeroes: (state) =>state.steamBestHeroes,
+        userTop10Heroes: (state) =>state.top10Heroes,
     },
     actions: {        
        async signinSteam(jwtTokenSteam){
@@ -100,7 +106,22 @@ export const useUsersStore = defineStore( {
             this.userPass = null;
             this.steamID = null;
             this.steamAvatar = null;
-        }
+        },
+        setSimpleSummary(){
+            console.log("this.simpleSummary start " + JSON.stringify(this.simpleSummary));
+            this.simpleSummary = getSimpleSummary(this.player);
+            console.log("this.simpleSummary end " + JSON.stringify(this.simpleSummary));
+        },
+        setSteamBestHeroes(){
+          console.log("this.steamBestHeroes start " + JSON.stringify(this.steamBestHeroes));
+          this.steamBestHeroes = getBestHeroes(this.player);
+          console.log("this.steamBestHeroes end " + JSON.stringify(this.steamBestHeroes));
+          this.top10Heroes = [];
+          for (let i = 0; i < 10; i++){
+            this.top10Heroes.push(this.steamBestHeroes.BestHeroes[i]);
+          }
+          console.log("this.top10Heroes " + JSON.stringify(this.top10Heroes));
+      },
     }
 });
 
