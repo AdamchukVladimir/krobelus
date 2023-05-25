@@ -116,11 +116,14 @@ export const useUsersStore = defineStore( {
           console.log("this.steamBestHeroes start " + JSON.stringify(this.steamBestHeroes));
           this.steamBestHeroes = getBestHeroes(this.player);
           console.log("this.steamBestHeroes end " + JSON.stringify(this.steamBestHeroes));
+          
+          console.log("this.top10Heroes start " + JSON.stringify(this.top10Heroes));
           this.top10Heroes = [];
+          
           for (let i = 0; i < 10; i++){
             this.top10Heroes.push(this.steamBestHeroes.BestHeroes[i]);
           }
-          console.log("this.top10Heroes " + JSON.stringify(this.top10Heroes));
+          console.log("this.top10Heroes end " + JSON.stringify(this.top10Heroes));
       },
     }
 });

@@ -32,7 +32,7 @@ export default {
         console.log(
           "new Value store " + JSON.stringify(newValue.player.simpleSummary)
         );
-        store.setSteamBestHeroes;
+        store.setSimpleSummary();
         store.setSteamBestHeroes();
       }
     );
