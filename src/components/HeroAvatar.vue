@@ -91,6 +91,7 @@ export default {
   filter: brightness(40%);
 }
 .fave {
-  border: thick double #32a1ce;
+  box-sizing: content-box;
+  box-shadow: 0px 0px 0px 1px rgba(255, 215, 0, 0.7);
 }
 </style>
