@@ -46,6 +46,22 @@
         :enemyId="5"
       />
     </div>
+    <div class="heroes allyPick">
+      <div class="clear">
+        <a v-on:click="clearAllEnemy()"
+          ><img
+            src="https://raw.githubusercontent.com/AdamchukVladimir/krobelus/master/src/assets/img/clear.png"
+          />
+        </a>
+      </div>
+      <AllyPick
+        @getAlly="getEnemyParams"
+        @allyClear="enemyClear"
+        :oAlly="oEnemy5"
+        :allyNumber="enemy5heroId"
+        :allyId="1"
+      />
+    </div>
     <div class="heroes heroesPull">
       <div class="hero str">
         <template
@@ -200,6 +216,7 @@ import gql from "graphql-tag";
 import { useQuery } from "@vue/apollo-composable";
 import HeroAvatar from "@/components/HeroAvatar.vue";
 import EnemyPick from "@/components/EnemyPick.vue";
+import AllyPick from "@/components/AllyPick.vue";
 import RecomendationPick from "@/components/RecomendationPick.vue";
 import { useUsersStore } from "@/store/usersStore";
 import { useRecomendationStore } from "@/store/recomendationStore";
@@ -234,6 +251,7 @@ export default {
   components: {
     HeroAvatar,
     EnemyPick,
+    AllyPick,
     RecomendationPick,
     Header,
   },
@@ -598,6 +616,9 @@ export default {
 .enemyPick {
   grid-area: enemyPick;
 }
+.allyPick {
+  grid-area: allyPick;
+}
 .heroesPull {
   grid-area: heroesPull;
   display: grid;
@@ -692,10 +713,10 @@ export default {
 .wrapper {
   display: grid;
   grid-gap: 50px 10px;
-  grid-template-columns: 1fr 4fr;
+  grid-template-columns: 1fr 4fr 1fr;
   grid-template-areas:
-    "enemyPick heroesPull"
-    "settings recomendationHeroes";
+    "enemyPick heroesPull allyPick"
+    "settings recomendationHeroes xxx";
 }
 body {
   font: small-caps 20px/1 sans-serif;
