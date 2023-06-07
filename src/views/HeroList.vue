@@ -48,18 +48,46 @@
     </div>
     <div class="heroes allyPick">
       <div class="clear">
-        <a v-on:click="clearAllEnemy()"
+        <a v-on:click="clearAllAlly()"
           ><img
             src="https://raw.githubusercontent.com/AdamchukVladimir/krobelus/master/src/assets/img/clear.png"
           />
         </a>
       </div>
       <AllyPick
-        @getAlly="getEnemyParams"
-        @allyClear="enemyClear"
-        :oAlly="oEnemy5"
-        :allyNumber="enemy5heroId"
+        @getAlly="getAllyParams"
+        @allyClear="allyClear"
+        :oAlly="oAlly1"
+        :allyNumber="ally1heroId"
         :allyId="1"
+      />
+      <AllyPick
+        @getAlly="getAllyParams"
+        @allyClear="allyClear"
+        :oAlly="oAlly2"
+        :allyNumber="ally2heroId"
+        :allyId="2"
+      />
+      <AllyPick
+        @getAlly="getAllyParams"
+        @allyClear="allyClear"
+        :oAlly="oAlly3"
+        :allyNumber="ally3heroId"
+        :allyId="3"
+      />
+      <AllyPick
+        @getAlly="getAllyParams"
+        @allyClear="allyClear"
+        :oAlly="oAlly4"
+        :allyNumber="ally4heroId"
+        :allyId="4"
+      />
+      <AllyPick
+        @getAlly="getAllyParams"
+        @allyClear="allyClear"
+        :oAlly="oAlly5"
+        :allyNumber="ally5heroId"
+        :allyId="5"
       />
     </div>
     <div class="heroes heroesPull">
@@ -286,6 +314,29 @@ export default {
       enemy4heroId: 0,
       enemy5heroId: 0,
       currentEnemy: 0,
+
+      oAlly1: {
+        activity: "off",
+      },
+      oAlly2: {
+        activity: "off",
+      },
+      oAlly3: {
+        activity: "off",
+      },
+      oAlly4: {
+        activity: "off",
+      },
+      oAlly5: {
+        activity: "off",
+      },
+      ally1heroId: 0,
+      ally2heroId: 0,
+      ally3heroId: 0,
+      ally4heroId: 0,
+      ally5heroId: 0,
+      currentAlly: 0,
+
       sorting: "advantage",
       expertmodeModel: true,
     };
@@ -525,7 +576,7 @@ export default {
       // this.currentEnemy = 0;
     },
     getHeroId(avatarObj) {
-      if (this.currentEnemy > 0) {
+      if (this.currentEnemy > 0 || this.currentAlly > 0) {
         if (avatarObj.activity == "active") {
           if (this.currentEnemy == 1 && this.enemy1heroId == 0) {
             this.enemy1heroId = avatarObj.id;
@@ -552,6 +603,35 @@ export default {
             this.mainResultCicle(avatarObj);
             this.getVersus5Store(avatarObj.id);
           }
+          console.log("currentEnemy " + this.currentEnemy);
+          console.log("enemy1heroId " + this.enemy1heroId);
+          console.log("currentAlly " + this.currentAlly);
+          console.log("ally1heroId " + this.ally1heroId);
+          if (this.currentAlly == 1 && this.ally1heroId == 0) {
+            this.ally1heroId = avatarObj.id;
+            this.mainResultCicle(avatarObj);
+            //this.getVersus1Store(avatarObj.id);
+          }
+          if (this.currentAlly == 2 && this.ally2heroId == 0) {
+            this.ally2heroId = avatarObj.id;
+            this.mainResultCicle(avatarObj);
+            //this.getVersus2Store(avatarObj.id);
+          }
+          if (this.currentAlly == 3 && this.ally3heroId == 0) {
+            this.ally3heroId = avatarObj.id;
+            this.mainResultCicle(avatarObj);
+            //this.getVersus3Store(avatarObj.id);
+          }
+          if (this.currentAlly == 4 && this.ally4heroId == 0) {
+            this.ally4heroId = avatarObj.id;
+            this.mainResultCicle(avatarObj);
+            //this.getVersus4Store(avatarObj.id);
+          }
+          if (this.currentAlly == 5 && this.ally5heroId == 0) {
+            this.ally5heroId = avatarObj.id;
+            this.mainResultCicle(avatarObj);
+            //this.getVersus5Store(avatarObj.id);
+          }
           //this.changeIdVersus(avatarObj.id);
           //this.ResultVersusChange(this.resultVersus);
           //console.log("resultVersus " + this.loadResultVersus());
@@ -567,14 +647,62 @@ export default {
     },
 
     //Добавляет текущему пользователю белую рамку
-    getEnemyParams(enemyId) {
-      console.log("Enemy id " + enemyId);
-      this.currentEnemy = enemyId;
+    getAllyParams(allyId) {
+      console.log("Ally id " + allyId);
+      this.currentAlly = allyId;
+      this.currentEnemy = 0;
+      this.oAlly1.activity = "off";
+      this.oAlly2.activity = "off";
+      this.oAlly3.activity = "off";
+      this.oAlly4.activity = "off";
+      this.oAlly5.activity = "off";
+
       this.oEnemy1.activity = "off";
       this.oEnemy2.activity = "off";
       this.oEnemy3.activity = "off";
       this.oEnemy4.activity = "off";
       this.oEnemy5.activity = "off";
+
+      if (this.currentAlly == 1) this.oAlly1.activity = "pick";
+      if (this.currentAlly == 2) this.oAlly2.activity = "pick";
+      if (this.currentAlly == 3) this.oAlly3.activity = "pick";
+      if (this.currentAlly == 4) this.oAlly4.activity = "pick";
+      if (this.currentAlly == 5) this.oAlly5.activity = "pick";
+    },
+    allyClear(clearAllyObject) {
+      this.currentAlly = clearAllyObject.AllyClearId;
+      if (clearAllyObject.AllyClearPickId > 0) {
+        for (let o = 0; o < this.mainResult.heroes.length; o++) {
+          if (this.mainResult.heroes[o].id == clearAllyObject.AllyClearPickId) {
+            this.mainResult.heroes[o].activity = "active";
+          }
+        }
+        if (this.currentAlly == 1) this.ally1heroId = 0;
+        if (this.currentAlly == 2) this.ally2heroId = 0;
+        if (this.currentAlly == 3) this.ally3heroId = 0;
+        if (this.currentAlly == 4) this.ally4heroId = 0;
+        if (this.currentAlly == 5) this.ally5heroId = 0;
+        this.getAllyParams(this.currentAlly);
+        console.log("allyClear " + this.currentAlly);
+
+        this.clearOneAllyStateStore(this.currentAlly); // Обнуляет Store указанного героя в Pinia
+      }
+    },
+    getEnemyParams(enemyId) {
+      console.log("Enemy id " + enemyId);
+      this.currentEnemy = enemyId;
+      this.currentAlly = 0;
+      this.oEnemy1.activity = "off";
+      this.oEnemy2.activity = "off";
+      this.oEnemy3.activity = "off";
+      this.oEnemy4.activity = "off";
+      this.oEnemy5.activity = "off";
+
+      this.oAlly1.activity = "off";
+      this.oAlly2.activity = "off";
+      this.oAlly3.activity = "off";
+      this.oAlly4.activity = "off";
+      this.oAlly5.activity = "off";
 
       if (this.currentEnemy == 1) this.oEnemy1.activity = "pick";
       if (this.currentEnemy == 2) this.oEnemy2.activity = "pick";

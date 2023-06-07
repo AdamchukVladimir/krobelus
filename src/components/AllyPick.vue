@@ -1,7 +1,7 @@
 <template>
   <form>
     <div class="heroes allyPick">
-      <div :class="classAllyPick">
+      <div :class="classHeroPick">
         <a v-on:click="allyChange()"
           ><img class="hero-image allyPick-image" :src="allyHeroImage" />
         </a>
