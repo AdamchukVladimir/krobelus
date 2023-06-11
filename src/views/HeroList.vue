@@ -147,12 +147,12 @@
         <br />
         <input
           type="radio"
-          class="synergy"
-          id="synergy"
-          value="synergy"
+          class="counter"
+          id="counter"
+          value="counter"
           v-model="sorting"
         />
-        <label for="synergy">synergy </label>
+        <label for="counter">counter </label>
         <br />
         <input
           type="radio"
@@ -178,8 +178,8 @@
             v-if="
               (heroVersus.matchCount > 0 &&
                 heroVersus.activity == true &&
-                heroVersus.synergy < 0 &&
-                sorting == 'synergy') ||
+                heroVersus.counter < 0 &&
+                sorting == 'counter') ||
               (heroVersus.matchCount > 0 &&
                 heroVersus.activity == true &&
                 heroVersus.advantage < 0 &&
@@ -196,8 +196,8 @@
               expertmodeModel == true &&
               ((heroVersus.matchCount > 0 &&
                 heroVersus.activity == true &&
-                heroVersus.synergy < 0 &&
-                sorting == 'synergy') ||
+                heroVersus.counter < 0 &&
+                sorting == 'counter') ||
                 (heroVersus.matchCount > 0 &&
                   heroVersus.activity == true &&
                   heroVersus.advantage < 0 &&
@@ -216,9 +216,9 @@
             </p>
             <p
               class="recomendation-info"
-              v-bind:class="{ sorting_active: sorting == 'synergy' }"
+              v-bind:class="{ sorting_active: sorting == 'counter' }"
             >
-              {{ ((-heroVersus.synergy * 100) / 100).toFixed(3) }}
+              {{ ((-heroVersus.counter * 100) / 100).toFixed(3) }}
             </p>
             <p
               class="recomendation-info"
@@ -344,6 +344,12 @@ export default {
   computed: {
     ...mapState(useUsersStore, { userloginStore: "userlogin" }),
     ...mapState(useRecomendationStore, {
+      getAllyHero1: "getAllyHero1",
+      getAllyHero2: "getAllyHero2",
+      getAllyHero3: "getAllyHero3",
+      getAllyHero4: "getAllyHero4",
+      getAllyHero5: "getAllyHero5",
+
       getVersusHero1: "getVersusHero1",
       getVersusHero2: "getVersusHero2",
       getVersusHero3: "getVersusHero3",
@@ -361,13 +367,28 @@ export default {
         this.getVersusHero4,
         this.getVersusHero5,
       ];
+      let aAllyheroes = [
+        this.getAllyHero1,
+        this.getAllyHero2,
+        this.getAllyHero3,
+        this.getAllyHero4,
+        this.getAllyHero5,
+      ];
+      console.log("aAllyheroes HeroList - " + JSON.stringify(aAllyheroes));
       let sEnemyFillCount = 0;
       for (let k = 0; k < aVersusheroes.length; k++) {
         if (aVersusheroes[k] != false) {
-          sEnemyFillCount++;
+          sEnemyFillCount++; //Колличество выбранных героев врага
         }
       }
       console.log("sEnemyFillCount - " + sEnemyFillCount);
+      let sAllyFillCount = 0;
+      for (let k = 0; k < aAllyheroes.length; k++) {
+        if (aAllyheroes[k] != false) {
+          sAllyFillCount++; //Колличество выбранных союзных героев
+        }
+      }
+      console.log("sAllyFillCount - " + sAllyFillCount);
 
       let oMainResultVersus = {
         heroesVersus: [
@@ -377,7 +398,9 @@ export default {
             winCount: 0,
             winRateHeroId1: 0,
             winRateHeroId2: 0,
+            counter: 0,
             synergy: 0,
+            synergyWinrate: 0,
             advantage: 0,
             winsAverage: 0,
             activity: true,
@@ -386,14 +409,18 @@ export default {
         ],
       };
       if (this.result) {
+        //Если константы(список героев в центре) подгрузились
         for (let i = 0; i < this.result.constants.heroes.length; i++) {
           oMainResultVersus.heroesVersus.push({
+            //oMainResultVersus массим объектов константных героев
             heroId2: this.result.constants.heroes[i].id,
             matchCount: 0,
             winCount: 0,
             winRateHeroId1: 0,
             winRateHeroId2: 0,
+            counter: 0,
             synergy: 0,
+            synergyWinrate: 0,
             advantage: 0,
             winsAverage: 0,
             activity: true,
@@ -406,6 +433,7 @@ export default {
 
       //Общая функция для versus Heroes если не false заполняет объект oMainResultVersus
       for (let k = 0; k < aVersusheroes.length; k++) {
+        //Цикл для всех выбранных персонажей
         if (aVersusheroes[k] == false) {
           console.log("oMainResultVersus  " + (k + 1) + aVersusheroes[k]);
         } else {
@@ -434,6 +462,45 @@ export default {
         }
       }
 
+      //Общая функция для ally Heroes если не false заполняет объект oMainResultVersus
+      for (let z = 0; z < aAllyheroes.length; z++) {
+        console.log("467 ");
+        //Цикл для всех выбранных персонажей
+        if (aAllyheroes[z] == false) {
+          console.log("oMainResultAlly  " + (z + 1) + aAllyheroes[z]);
+        } else {
+          for (
+            let x = 0;
+            x < aAllyheroes[z].heroStats.matchUp[0].with.length;
+            x++
+          ) {
+            for (let c = 0; c < oMainResultVersus.heroesVersus.length; c++) {
+              if (
+                oMainResultVersus.heroesVersus[c].heroId2 ==
+                aAllyheroes[z].heroStats.matchUp[0].with[x].heroId1
+              ) {
+                oMainResultVersus.heroesVersus[c].activity = false; //Отключаем героя чтобы выбранные не могли попасть в рекомендованные
+                oMainResultVersus.heroesVersus[c].winsAverage =
+                  oMainResultVersus.heroesVersus[c].winsAverage + 1; //Костыль чтобы у уже отключенных героев снизить винрейт, чтобы их индексы не попадали в выдачу
+                console.log(
+                  "485 id- " + oMainResultVersus.heroesVersus[c].heroId2
+                );
+                console.log(
+                  "489 aAlly- " +
+                    aAllyheroes[z].heroStats.matchUp[0].with[x].heroId1
+                );
+              }
+              if (
+                aAllyheroes[z].heroStats.matchUp[0].with[x].heroId2 ==
+                oMainResultVersus.heroesVersus[c].heroId2
+              ) {
+                //setVersusHeroProperties(aVersusheroes[z], c, x);
+              }
+            }
+          }
+        }
+      }
+
       //Функционал делит winRateHeroId1, winRateHeroId2, winsAverage на колличество
       // выбранных героев для корректного расчета
       for (let j = 0; j < oMainResultVersus.heroesVersus.length; j++) {
@@ -449,16 +516,16 @@ export default {
         //Сумма synergy и разницы между ср.Винрейтом и 50%
         oMainResultVersus.heroesVersus[j].advantage =
           oMainResultVersus.heroesVersus[j].advantage +
-          oMainResultVersus.heroesVersus[j].synergy +
+          oMainResultVersus.heroesVersus[j].counter +
           (0.5 - oMainResultVersus.heroesVersus[j].winRateHeroId2) * 100;
       }
       if (this.sorting == "advantage") {
         oMainResultVersus.heroesVersus.sort((a, b) =>
           a.advantage > b.advantage ? 1 : -1
         );
-      } else if (this.sorting == "synergy") {
+      } else if (this.sorting == "counter") {
         oMainResultVersus.heroesVersus.sort((a, b) =>
-          a.synergy > b.synergy ? 1 : -1
+          a.counter > b.counter ? 1 : -1
         ); //sort
       } else if (this.sorting == "winrate") {
         oMainResultVersus.heroesVersus.sort((a, b) =>
@@ -469,8 +536,8 @@ export default {
       //console.log("oMainResultVersus " + JSON.stringify(oMainResultVersus));
       //Функция вызывается если текущий VersusHero не false
       function setVersusHeroProperties(oVersusHeroProperties, j, p) {
-        oMainResultVersus.heroesVersus[j].synergy =
-          oMainResultVersus.heroesVersus[j].synergy +
+        oMainResultVersus.heroesVersus[j].counter =
+          oMainResultVersus.heroesVersus[j].counter +
           oVersusHeroProperties.heroStats.matchUp[0].vs[p].synergy;
 
         oMainResultVersus.heroesVersus[j].matchCount =
@@ -551,7 +618,31 @@ export default {
       getVersus5Store: "getVersus5",
       clearAllVersusStateStore: "clearAllVersusState",
       clearOneVersusStateStore: "clearOneVersusState",
+      getAlly1Store: "getAlly1",
+      getAlly2Store: "getAlly2",
+      getAlly3Store: "getAlly3",
+      getAlly4Store: "getAlly4",
+      getAlly5Store: "getAlly5",
+      clearAllAllyStateStore: "clearAllAllyState",
+      clearOneAllyStateStore: "clearOneAllyState",
     }),
+    clearAllAlly() {
+      console.log("clearAllAlly");
+      for (let u = 0; u < this.mainResult.heroes.length; u++) {
+        if (this.mainResult.heroes[u].activity == "inactive") {
+          console.log(
+            "this.mainResult.heroes[u].id " + this.mainResult.heroes[u].id
+          );
+          this.mainResult.heroes[u].activity = "active";
+        }
+      }
+      this.ally1heroId = 0;
+      this.ally2heroId = 0;
+      this.ally3heroId = 0;
+      this.ally4heroId = 0;
+      this.ally5heroId = 0;
+      this.clearAllAllyStateStore(); // Обнуляет Store в Pinia
+    },
     clearAllEnemy() {
       console.log("clearAllEnemy");
       for (let u = 0; u < this.mainResult.heroes.length; u++) {
@@ -610,27 +701,27 @@ export default {
           if (this.currentAlly == 1 && this.ally1heroId == 0) {
             this.ally1heroId = avatarObj.id;
             this.mainResultCicle(avatarObj);
-            //this.getVersus1Store(avatarObj.id);
+            this.getAlly1Store(avatarObj.id);
           }
           if (this.currentAlly == 2 && this.ally2heroId == 0) {
             this.ally2heroId = avatarObj.id;
             this.mainResultCicle(avatarObj);
-            //this.getVersus2Store(avatarObj.id);
+            this.getAlly2Store(avatarObj.id);
           }
           if (this.currentAlly == 3 && this.ally3heroId == 0) {
             this.ally3heroId = avatarObj.id;
             this.mainResultCicle(avatarObj);
-            //this.getVersus3Store(avatarObj.id);
+            this.getAlly3Store(avatarObj.id);
           }
           if (this.currentAlly == 4 && this.ally4heroId == 0) {
             this.ally4heroId = avatarObj.id;
             this.mainResultCicle(avatarObj);
-            //this.getVersus4Store(avatarObj.id);
+            this.getAlly4Store(avatarObj.id);
           }
           if (this.currentAlly == 5 && this.ally5heroId == 0) {
             this.ally5heroId = avatarObj.id;
             this.mainResultCicle(avatarObj);
-            //this.getVersus5Store(avatarObj.id);
+            this.getAlly5Store(avatarObj.id);
           }
           //this.changeIdVersus(avatarObj.id);
           //this.ResultVersusChange(this.resultVersus);
