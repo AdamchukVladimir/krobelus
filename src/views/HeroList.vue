@@ -163,6 +163,33 @@
         />
         <label for="winrate">winrate </label>
         <br />
+        <input
+          type="radio"
+          class="synergy"
+          id="synergy"
+          value="synergy"
+          v-model="sorting"
+        />
+        <label for="synergy">synergy </label>
+        <br />
+        <input
+          type="radio"
+          class="synergyWinrate"
+          id="synergyWinrate"
+          value="synergyWinrate"
+          v-model="sorting"
+        />
+        <label for="synergyWinrate">synergyWinrate </label>
+        <br />
+        <input
+          type="radio"
+          class="complexWinrate"
+          id="complexWinrate"
+          value="complexWinrate"
+          v-model="sorting"
+        />
+        <label for="complexWinrate">complexWinrate </label>
+        <br />
         <br />
         <input type="checkbox" id="expertmode" v-model="expertmodeModel" />
         <label for="expertmode">expert mode</label>
@@ -228,6 +255,15 @@
             </p>
             <p class="recomendation-info">
               {{ (heroVersus.winRateHeroId2 * 100).toFixed(1) }}%
+            </p>
+            <p class="recomendation-info">
+              {{ heroVersus.synergy.toFixed(3) }}
+            </p>
+            <p class="recomendation-info">
+              {{ heroVersus.synergyWinrate.toFixed(3) }}
+            </p>
+            <p class="recomendation-info">
+              {{ heroVersus.complexWinrate.toFixed(3) }}
             </p>
             <p class="recomendation-info">
               {{ heroVersus.matchCount }}
@@ -401,6 +437,7 @@ export default {
             counter: 0,
             synergy: 0,
             synergyWinrate: 0,
+            complexWinrate: 0,
             advantage: 0,
             winsAverage: 0,
             activity: true,
@@ -421,6 +458,7 @@ export default {
             counter: 0,
             synergy: 0,
             synergyWinrate: 0,
+            complexWinrate: 0,
             advantage: 0,
             winsAverage: 0,
             activity: true,
@@ -489,12 +527,16 @@ export default {
                   "489 aAlly- " +
                     aAllyheroes[z].heroStats.matchUp[0].with[x].heroId1
                 );
+                console.log(
+                  "493 aAlly- " +
+                    JSON.stringify(aAllyheroes[z].heroStats.matchUp[0].with[x])
+                );
               }
               if (
                 aAllyheroes[z].heroStats.matchUp[0].with[x].heroId2 ==
                 oMainResultVersus.heroesVersus[c].heroId2
               ) {
-                //setVersusHeroProperties(aVersusheroes[z], c, x);
+                setAllyHeroProperties(aAllyheroes[z], c, x);
               }
             }
           }
@@ -509,6 +551,32 @@ export default {
 
         oMainResultVersus.heroesVersus[j].winRateHeroId2 =
           oMainResultVersus.heroesVersus[j].winRateHeroId2 / sEnemyFillCount;
+
+        //Дополнение для союзников
+        oMainResultVersus.heroesVersus[j].complexWinrate =
+          (1 -
+            oMainResultVersus.heroesVersus[j].winsAverage +
+            oMainResultVersus.heroesVersus[j].synergyWinrate) /
+          (sAllyFillCount + sEnemyFillCount);
+        console.log(
+          "562 oMainResultVersus.heroesVersus[j].winsAverage " +
+            oMainResultVersus.heroesVersus[j].winsAverage
+        );
+        console.log(
+          "562 oMainResultVersus.heroesVersus[j].synergyWinrate " +
+            oMainResultVersus.heroesVersus[j].synergyWinrate
+        );
+        console.log("562 sAllyFillCount " + sAllyFillCount);
+        console.log("562 sEnemyFillCount " + sEnemyFillCount);
+        /*
+          Посмотреть почему не правильно считается complexWinrate!!!!
+
+        */
+
+        oMainResultVersus.heroesVersus[j].synergyWinrate =
+          oMainResultVersus.heroesVersus[j].synergyWinrate / sAllyFillCount;
+
+        //END конец
 
         oMainResultVersus.heroesVersus[j].winsAverage =
           oMainResultVersus.heroesVersus[j].winsAverage / sEnemyFillCount;
@@ -531,8 +599,21 @@ export default {
         oMainResultVersus.heroesVersus.sort((a, b) =>
           a.winsAverage > b.winsAverage ? 1 : -1
         ); //sort
+      } else if (this.sorting == "synergy") {
+        oMainResultVersus.heroesVersus.sort((a, b) =>
+          a.synergy > b.synergy ? 1 : -1
+        ); //sort
+      } else if (this.sorting == "synergyWinrate") {
+        oMainResultVersus.heroesVersus.sort((a, b) =>
+          a.synergyWinrate > b.synergyWinrate ? 1 : -1
+        ); //sort
+      } else if (this.sorting == "complexWinrate") {
+        oMainResultVersus.heroesVersus.sort((a, b) =>
+          a.complexWinrate > b.complexWinrate ? 1 : -1
+        ); //sort
       }
 
+      //synergy
       //console.log("oMainResultVersus " + JSON.stringify(oMainResultVersus));
       //Функция вызывается если текущий VersusHero не false
       function setVersusHeroProperties(oVersusHeroProperties, j, p) {
@@ -560,6 +641,35 @@ export default {
           oMainResultVersus.heroesVersus[j].winsAverage +
           oVersusHeroProperties.heroStats.matchUp[0].vs[p].winsAverage;
       }
+
+      //Функция заполняет атрибуты в зависимости от союзных героев(Справа)
+      function setAllyHeroProperties(oAllyHeroProperties, c, x) {
+        oMainResultVersus.heroesVersus[c].synergy =
+          oMainResultVersus.heroesVersus[c].synergy +
+          oAllyHeroProperties.heroStats.matchUp[0].with[x].synergy;
+
+        oMainResultVersus.heroesVersus[c].matchCount =
+          oMainResultVersus.heroesVersus[c].matchCount +
+          oAllyHeroProperties.heroStats.matchUp[0].with[x].matchCount;
+
+        oMainResultVersus.heroesVersus[c].winCount =
+          oMainResultVersus.heroesVersus[c].winCount +
+          oAllyHeroProperties.heroStats.matchUp[0].with[x].winCount;
+
+        //Для союзных героев не заполняется т.к. избыточно
+        // oMainResultVersus.heroesVersus[c].winRateHeroId1 =
+        //   oMainResultVersus.heroesVersus[c].winRateHeroId1 +
+        //   oAllyHeroProperties.heroStats.matchUp[0].with[x].winRateHeroId1;
+
+        // oMainResultVersus.heroesVersus[c].winRateHeroId2 =
+        //   oMainResultVersus.heroesVersus[c].winRateHeroId2 +
+        //   oAllyHeroProperties.heroStats.matchUp[0].with[x].winRateHeroId2;
+
+        oMainResultVersus.heroesVersus[c].synergyWinrate =
+          oMainResultVersus.heroesVersus[c].synergyWinrate +
+          oAllyHeroProperties.heroStats.matchUp[0].with[x].winsAverage;
+      }
+      console.log("oMainResultVersus " + JSON.stringify(oMainResultVersus));
       return oMainResultVersus;
     },
     mainResult() {
