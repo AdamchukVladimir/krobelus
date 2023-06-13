@@ -179,7 +179,7 @@
           value="synergyWinrate"
           v-model="sorting"
         />
-        <label for="synergyWinrate">synergyWinrate </label>
+        <label for="synergyWinrate">synergyWR </label>
         <br />
         <input
           type="radio"
@@ -188,7 +188,7 @@
           value="complexWinrate"
           v-model="sorting"
         />
-        <label for="complexWinrate">complexWinrate </label>
+        <label for="complexWinrate">complexWR </label>
         <br />
         <br />
         <input type="checkbox" id="expertmode" v-model="expertmodeModel" />
@@ -214,7 +214,19 @@
               (heroVersusIndex < 67 &&
                 heroVersus.matchCount > 0 &&
                 heroVersus.activity == true &&
-                sorting == 'winrate')
+                sorting == 'winrate') ||
+              (heroVersus.matchCount > 0 &&
+                heroVersus.activity == true &&
+                heroVersus.synergy > 0 &&
+                sorting == 'synergy') ||
+              (heroVersus.matchCount > 0 &&
+                heroVersus.activity == true &&
+                heroVersus.synergyWinrate > 0 &&
+                sorting == 'synergyWinrate') ||
+              (heroVersus.matchCount > 0 &&
+                heroVersus.activity == true &&
+                heroVersus.complexWinrate > 0 &&
+                sorting == 'complexWinrate')
             "
             :heroObj="heroVersus"
           />
@@ -232,7 +244,19 @@
                 (heroVersusIndex < 67 &&
                   heroVersus.matchCount > 0 &&
                   heroVersus.activity == true &&
-                  sorting == 'winrate'))
+                  sorting == 'winrate') ||
+                (heroVersus.matchCount > 0 &&
+                  heroVersus.activity == true &&
+                  heroVersus.synergy > 0 &&
+                  sorting == 'synergy') ||
+                (heroVersus.matchCount > 0 &&
+                  heroVersus.activity == true &&
+                  heroVersus.synergyWinrate > 0 &&
+                  sorting == 'synergyWinrate') ||
+                (heroVersus.matchCount > 0 &&
+                  heroVersus.activity == true &&
+                  heroVersus.complexWinrate > 0 &&
+                  sorting == 'complexWinrate'))
             "
           >
             <p
@@ -256,13 +280,22 @@
             <p class="recomendation-info">
               {{ (heroVersus.winRateHeroId2 * 100).toFixed(1) }}%
             </p>
-            <p class="recomendation-info">
+            <p
+              class="recomendation-info"
+              v-bind:class="{ sorting_active: sorting == 'synergy' }"
+            >
               {{ heroVersus.synergy.toFixed(3) }}
             </p>
-            <p class="recomendation-info">
+            <p
+              class="recomendation-info"
+              v-bind:class="{ sorting_active: sorting == 'synergyWinrate' }"
+            >
               {{ heroVersus.synergyWinrate.toFixed(3) }}
             </p>
-            <p class="recomendation-info">
+            <p
+              class="recomendation-info"
+              v-bind:class="{ sorting_active: sorting == 'complexWinrate' }"
+            >
               {{ heroVersus.complexWinrate.toFixed(3) }}
             </p>
             <p class="recomendation-info">
@@ -601,15 +634,15 @@ export default {
         ); //sort
       } else if (this.sorting == "synergy") {
         oMainResultVersus.heroesVersus.sort((a, b) =>
-          a.synergy > b.synergy ? 1 : -1
+          a.synergy < b.synergy ? 1 : -1
         ); //sort
       } else if (this.sorting == "synergyWinrate") {
         oMainResultVersus.heroesVersus.sort((a, b) =>
-          a.synergyWinrate > b.synergyWinrate ? 1 : -1
+          a.synergyWinrate < b.synergyWinrate ? 1 : -1
         ); //sort
       } else if (this.sorting == "complexWinrate") {
         oMainResultVersus.heroesVersus.sort((a, b) =>
-          a.complexWinrate > b.complexWinrate ? 1 : -1
+          a.complexWinrate < b.complexWinrate ? 1 : -1
         ); //sort
       }
 
