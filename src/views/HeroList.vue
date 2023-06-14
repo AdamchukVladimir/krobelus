@@ -138,15 +138,6 @@
         <br />
         <input
           type="radio"
-          class="advantage"
-          id="advantage"
-          value="advantage"
-          v-model="sorting"
-        />
-        <label for="advantage">advantage</label>
-        <br />
-        <input
-          type="radio"
           class="counter"
           id="counter"
           value="counter"
@@ -259,12 +250,6 @@
                   sorting == 'complexWinrate'))
             "
           >
-            <p
-              class="recomendation-info"
-              v-bind:class="{ sorting_active: sorting == 'advantage' }"
-            >
-              {{ ((-heroVersus.advantage * 100) / 100).toFixed(3) }}
-            </p>
             <p
               class="recomendation-info"
               v-bind:class="{ sorting_active: sorting == 'counter' }"
@@ -406,7 +391,7 @@ export default {
       ally5heroId: 0,
       currentAlly: 0,
 
-      sorting: "advantage",
+      sorting: "winrate",
       expertmodeModel: true,
     };
   },
@@ -585,22 +570,6 @@ export default {
         oMainResultVersus.heroesVersus[j].winRateHeroId2 =
           oMainResultVersus.heroesVersus[j].winRateHeroId2 / sEnemyFillCount;
 
-        //Дополнение для союзников
-        oMainResultVersus.heroesVersus[j].complexWinrate =
-          (1 -
-            oMainResultVersus.heroesVersus[j].winsAverage +
-            oMainResultVersus.heroesVersus[j].synergyWinrate) /
-          (sAllyFillCount + sEnemyFillCount);
-        console.log(
-          "562 oMainResultVersus.heroesVersus[j].winsAverage " +
-            oMainResultVersus.heroesVersus[j].winsAverage
-        );
-        console.log(
-          "562 oMainResultVersus.heroesVersus[j].synergyWinrate " +
-            oMainResultVersus.heroesVersus[j].synergyWinrate
-        );
-        console.log("562 sAllyFillCount " + sAllyFillCount);
-        console.log("562 sEnemyFillCount " + sEnemyFillCount);
         /*
           Посмотреть почему не правильно считается complexWinrate!!!!
 
@@ -613,6 +582,12 @@ export default {
 
         oMainResultVersus.heroesVersus[j].winsAverage =
           oMainResultVersus.heroesVersus[j].winsAverage / sEnemyFillCount;
+        //Дополнение для союзников
+        oMainResultVersus.heroesVersus[j].complexWinrate =
+          (1 -
+            oMainResultVersus.heroesVersus[j].winsAverage +
+            oMainResultVersus.heroesVersus[j].synergyWinrate) /
+          2;
 
         //Сумма synergy и разницы между ср.Винрейтом и 50%
         oMainResultVersus.heroesVersus[j].advantage =
