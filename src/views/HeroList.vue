@@ -13,14 +13,14 @@
         @getEnemy="getEnemyParams"
         @enemyClear="enemyClear"
         :oEnemy="oEnemy1"
-        :enemyNumber="enemy1heroId"
+        :enemyNumber="getHeroIdStore(1, `enemyHeroes`)"
         :enemyId="1"
       />
       <EnemyPick
         @getEnemy="getEnemyParams"
         @enemyClear="enemyClear"
         :oEnemy="oEnemy2"
-        :enemyNumber="enemy2heroId"
+        :enemyNumber="getHeroIdStore(2, `enemyHeroes`)"
         :enemyId="2"
       />
 
@@ -28,21 +28,21 @@
         @getEnemy="getEnemyParams"
         @enemyClear="enemyClear"
         :oEnemy="oEnemy3"
-        :enemyNumber="enemy3heroId"
+        :enemyNumber="getHeroIdStore(3, `enemyHeroes`)"
         :enemyId="3"
       />
       <EnemyPick
         @getEnemy="getEnemyParams"
         @enemyClear="enemyClear"
         :oEnemy="oEnemy4"
-        :enemyNumber="enemy4heroId"
+        :enemyNumber="getHeroIdStore(4, `enemyHeroes`)"
         :enemyId="4"
       />
       <EnemyPick
         @getEnemy="getEnemyParams"
         @enemyClear="enemyClear"
         :oEnemy="oEnemy5"
-        :enemyNumber="enemy5heroId"
+        :enemyNumber="getHeroIdStore(5, `enemyHeroes`)"
         :enemyId="5"
       />
     </div>
@@ -58,35 +58,35 @@
         @getAlly="getAllyParams"
         @allyClear="allyClear"
         :oAlly="oAlly1"
-        :allyNumber="ally1heroId"
+        :allyNumber="getHeroIdStore(1, `allyHeroes`)"
         :allyId="1"
       />
       <AllyPick
         @getAlly="getAllyParams"
         @allyClear="allyClear"
         :oAlly="oAlly2"
-        :allyNumber="ally2heroId"
+        :allyNumber="getHeroIdStore(2, `allyHeroes`)"
         :allyId="2"
       />
       <AllyPick
         @getAlly="getAllyParams"
         @allyClear="allyClear"
         :oAlly="oAlly3"
-        :allyNumber="ally3heroId"
+        :allyNumber="getHeroIdStore(3, `allyHeroes`)"
         :allyId="3"
       />
       <AllyPick
         @getAlly="getAllyParams"
         @allyClear="allyClear"
         :oAlly="oAlly4"
-        :allyNumber="ally4heroId"
+        :allyNumber="getHeroIdStore(4, `allyHeroes`)"
         :allyId="4"
       />
       <AllyPick
         @getAlly="getAllyParams"
         @allyClear="allyClear"
         :oAlly="oAlly5"
-        :allyNumber="ally5heroId"
+        :allyNumber="getHeroIdStore(5, `allyHeroes`)"
         :allyId="5"
       />
     </div>
@@ -145,15 +145,7 @@
         />
         <label for="counter">counter </label>
         <br />
-        <input
-          type="radio"
-          class="winrate"
-          id="winrate"
-          value="winrate"
-          v-model="sorting"
-        />
-        <label for="winrate">winrate </label>
-        <br />
+
         <input
           type="radio"
           class="synergy"
@@ -162,6 +154,16 @@
           v-model="sorting"
         />
         <label for="synergy">synergy </label>
+        <br />
+        <input
+          type="radio"
+          class="winrate"
+          id="winrate"
+          value="winrate"
+          v-model="sorting"
+        />
+        <label for="winrate">winrate </label>
+
         <br />
         <input
           type="radio"
@@ -409,6 +411,7 @@ export default {
       getVersusHero3: "getVersusHero3",
       getVersusHero4: "getVersusHero4",
       getVersusHero5: "getVersusHero5",
+      getHeroIdStore: "getHeroId", //Получает id героя по параметрам позиции и стороны enemy/ally
       getTestStore: "getTestStore",
     }),
 
@@ -743,6 +746,8 @@ export default {
       getAlly5Store: "getAlly5",
       clearAllAllyStateStore: "clearAllAllyState",
       clearOneAllyStateStore: "clearOneAllyState",
+      putHeroesIdStore: "putHeroesId",
+      clearHeroesIdAllSore: "clearHeroesIdAll",
     }),
     clearAllAlly() {
       console.log("clearAllAlly");
@@ -760,6 +765,7 @@ export default {
       this.ally4heroId = 0;
       this.ally5heroId = 0;
       this.clearAllAllyStateStore(); // Обнуляет Store в Pinia
+      this.clearHeroesIdAllSore("ally"); //обнуляет ally героев в Pinia
     },
     clearAllEnemy() {
       console.log("clearAllEnemy");
@@ -776,7 +782,8 @@ export default {
       this.enemy3heroId = 0;
       this.enemy4heroId = 0;
       this.enemy5heroId = 0;
-      this.clearAllVersusStateStore(); // Обнуляет Store в Pinia
+      this.clearAllVersusStateStore(); // Обнуляет рекомендации Store в Pinia
+      this.clearHeroesIdAllSore("enemy"); //обнуляет enemy героев в Pinia
       // this.oEnemy1.activity = "off";
       // this.oEnemy2.activity = "off";
       // this.oEnemy3.activity = "off";
@@ -791,26 +798,33 @@ export default {
             this.enemy1heroId = avatarObj.id;
             this.mainResultCicle(avatarObj);
             this.getVersus1Store(avatarObj.id);
+            this.putHeroesIdStore(1, avatarObj.id, "enemy"); //заполняет выбранных героев в Pinia
+            let tempo = this.getHeroIdStore(1, "enemyHeroes");
+            console.log("getHeroIdStore allHeroes enemy id1 " + tempo);
           }
           if (this.currentEnemy == 2 && this.enemy2heroId == 0) {
             this.enemy2heroId = avatarObj.id;
             this.mainResultCicle(avatarObj);
             this.getVersus2Store(avatarObj.id);
+            this.putHeroesIdStore(2, avatarObj.id, "enemy");
           }
           if (this.currentEnemy == 3 && this.enemy3heroId == 0) {
             this.enemy3heroId = avatarObj.id;
             this.mainResultCicle(avatarObj);
             this.getVersus3Store(avatarObj.id);
+            this.putHeroesIdStore(3, avatarObj.id, "enemy");
           }
           if (this.currentEnemy == 4 && this.enemy4heroId == 0) {
             this.enemy4heroId = avatarObj.id;
             this.mainResultCicle(avatarObj);
             this.getVersus4Store(avatarObj.id);
+            this.putHeroesIdStore(4, avatarObj.id, "enemy");
           }
           if (this.currentEnemy == 5 && this.enemy5heroId == 0) {
             this.enemy5heroId = avatarObj.id;
             this.mainResultCicle(avatarObj);
             this.getVersus5Store(avatarObj.id);
+            this.putHeroesIdStore(5, avatarObj.id, "enemy");
           }
           console.log("currentEnemy " + this.currentEnemy);
           console.log("enemy1heroId " + this.enemy1heroId);
@@ -820,30 +834,32 @@ export default {
             this.ally1heroId = avatarObj.id;
             this.mainResultCicle(avatarObj);
             this.getAlly1Store(avatarObj.id);
+            this.putHeroesIdStore(1, avatarObj.id, "ally"); //заполняет выбранных героев в Pinia
           }
           if (this.currentAlly == 2 && this.ally2heroId == 0) {
             this.ally2heroId = avatarObj.id;
             this.mainResultCicle(avatarObj);
             this.getAlly2Store(avatarObj.id);
+            this.putHeroesIdStore(2, avatarObj.id, "ally");
           }
           if (this.currentAlly == 3 && this.ally3heroId == 0) {
             this.ally3heroId = avatarObj.id;
             this.mainResultCicle(avatarObj);
             this.getAlly3Store(avatarObj.id);
+            this.putHeroesIdStore(3, avatarObj.id, "ally");
           }
           if (this.currentAlly == 4 && this.ally4heroId == 0) {
             this.ally4heroId = avatarObj.id;
             this.mainResultCicle(avatarObj);
             this.getAlly4Store(avatarObj.id);
+            this.putHeroesIdStore(4, avatarObj.id, "ally");
           }
           if (this.currentAlly == 5 && this.ally5heroId == 0) {
             this.ally5heroId = avatarObj.id;
             this.mainResultCicle(avatarObj);
             this.getAlly5Store(avatarObj.id);
+            this.putHeroesIdStore(5, avatarObj.id, "ally");
           }
-          //this.changeIdVersus(avatarObj.id);
-          //this.ResultVersusChange(this.resultVersus);
-          //console.log("resultVersus " + this.loadResultVersus());
         }
       }
     },
@@ -895,6 +911,7 @@ export default {
         console.log("allyClear " + this.currentAlly);
 
         this.clearOneAllyStateStore(this.currentAlly); // Обнуляет Store указанного героя в Pinia
+        this.putHeroesIdStore(this.currentAlly, 0, "ally"); //Удаляет выбранного героя из Pinia
       }
     },
     getEnemyParams(enemyId) {
@@ -938,6 +955,7 @@ export default {
         console.log("enemyClear " + this.currentEnemy);
 
         this.clearOneVersusStateStore(this.currentEnemy); // Обнуляет Store указанного героя в Pinia
+        this.putHeroesIdStore(this.currentEnemy, 0, "enemy"); //Удаляет выбранного героя из Pinia
       }
     },
   },

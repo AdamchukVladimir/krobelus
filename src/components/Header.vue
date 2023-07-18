@@ -19,6 +19,7 @@ import VueCookies from "vue-cookies";
 import { mapActions, mapState } from "pinia";
 import { useUsersStore } from "@/store/usersStore";
 import { ref, watch } from "vue";
+import { useRecomendationStore } from "@/store/recomendationStore";
 
 export default {
   name: "Header",
@@ -44,8 +45,24 @@ export default {
       signinStore: "signin",
       signoutStore: "signout",
       signinSteamStore: "signinSteam",
+
       setSimpleSummaryStore: "setSimpleSummary",
       setSteamBestHeroesStore: "setSteamBestHeroes",
+    }),
+    ...mapActions(useRecomendationStore, {
+      getDraftOCRStore: "getDraftOCR",
+      getVersus1Store: "getVersus1",
+      getVersus2Store: "getVersus2",
+      getVersus3Store: "getVersus3",
+      getVersus4Store: "getVersus4",
+      getVersus5Store: "getVersus5",
+      clearAllVersusStateStore: "clearAllVersusState",
+      clearOneVersusStateStore: "clearOneVersusState",
+      getAlly1Store: "getAlly1",
+      getAlly2Store: "getAlly2",
+      getAlly3Store: "getAlly3",
+      getAlly4Store: "getAlly4",
+      getAlly5Store: "getAlly5",
     }),
     fLogout() {
       VueCookies.remove("krobelus_login");
@@ -59,6 +76,9 @@ export default {
       getUserlogin: "userlogin",
       getUserSteamAvatar: "userSteamAvatar",
       getUserSteamID: "userSteamID",
+    }),
+    ...mapState(useRecomendationStore, {
+      getHeroIdStore: "getHeroId",
     }),
     fAutoSignin() {
       if (
@@ -88,10 +108,37 @@ export default {
     fAvatarImage() {
       if (this.getUserSteamAvatar) return this.getUserSteamAvatar;
     },
+    fgetDraftOCRStore() {
+      this.getDraftOCRStore();
+      //setInterval(this.getDraftOCRStore, 2000); //Отправка запроса OCR каждые 2 сек
+    },
+    fgetAllrecomendation() {
+      //Обновляет store рекомендации всех выбранных героев, для автоматизации
+      // setTimeout(() => {
+      //   console.log(
+      //     "fgetAllrecomendation " + this.getHeroIdStore(1, `enemyHeroes`)
+      //   );
+      // }, "8000");
+      setTimeout(() => {
+        this.getAlly1Store(this.getHeroIdStore(1, `enemyHeroes`));
+        this.getAlly2Store(this.getHeroIdStore(2, `enemyHeroes`));
+        this.getAlly3Store(this.getHeroIdStore(3, `enemyHeroes`));
+        this.getAlly4Store(this.getHeroIdStore(4, `enemyHeroes`));
+        this.getAlly5Store(this.getHeroIdStore(5, `enemyHeroes`));
+
+        this.getAlly1Store(this.getHeroIdStore(1, `allyHeroes`));
+        this.getAlly2Store(this.getHeroIdStore(2, `allyHeroes`));
+        this.getAlly3Store(this.getHeroIdStore(3, `allyHeroes`));
+        this.getAlly4Store(this.getHeroIdStore(4, `allyHeroes`));
+        this.getAlly5Store(this.getHeroIdStore(5, `allyHeroes`));
+      }, "8000");
+    },
   },
   mounted() {
     this.fAutoSignin;
     this.fAutoSigninSteam;
+    this.fgetDraftOCRStore; //OCR получение драфта
+    this.fgetAllrecomendation; //получение рекомендаций по всем героям
     //const jwtToken = VueCookies.get("tokenSteam");
     console.log("jwtToken " + JSON.stringify(VueCookies.get("tokenSteam")));
     console.log(

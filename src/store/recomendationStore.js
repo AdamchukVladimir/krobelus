@@ -2,12 +2,15 @@ import { defineStore } from 'pinia';
 import gql from "graphql-tag";
 import { provideApolloClient , useQuery } from "@vue/apollo-composable";
 import apolloClient from '@/api/ApolloClientGraphQL.js';
+import axios from "axios";
 //import {signin } from '@/api/signin';
 
 // const VERSUS_QUERY = gql`
 //   query getHeroesById($id: Short!) {
 //     heroStats {
 //       matchUp(heroId: $id, week: 1679165814, take: 124) {
+
+
 const VERSUS_QUERY = gql`
   query getHeroesById($id: Short!, $week: Long!) {
     heroStats {
@@ -56,6 +59,11 @@ export const useRecomendationStore = defineStore('RecomendationStore', {
                 },
               ],
         },
+        allHeroes:{
+          allyHeroes:[0,0,0,0,0],
+          enemyHeroes:[0,0,0,0,0],
+        },
+        radiantSide:true,
         versusHero1:false,
         versusHero2:false,
         versusHero3:false,
@@ -80,8 +88,61 @@ export const useRecomendationStore = defineStore('RecomendationStore', {
       getAllyHero3: (state) =>state.allyHero3,
       getAllyHero4: (state) =>state.allyHero4,
       getAllyHero5: (state) =>state.allyHero5,
+      getHeroId: (state) => (heroNumber,side) => {
+        return state.allHeroes[side][heroNumber-1];
+      },
     },
     actions: {
+          async getDraftOCR(){
+            console.log("async getDraftOCR");  
+            for (let heroNumber = 1; heroNumber < 11; heroNumber++){  
+              let ocrDraftData = await axios.post(
+                  "http://localhost:5000/api/ocr/draft",
+                  {
+                    heroNumber: heroNumber//heroNumber //2
+                  }
+              );
+              if (this.radiantSide) {
+                if(heroNumber<6){
+                  //console.log("post ocr " +heroNumber +" "+ ocrDraftData.data);
+                  //console.log('ocrDraftData allHeroes.allyheroes '+ this.allHeroes.allyHeroes);
+                  //console.log('ocrDraftData.data>0 ' + ocrDraftData.data>0);//??????????
+                  if (ocrDraftData.data>0){
+                    this.allHeroes.allyHeroes.splice(heroNumber-1, 1, ocrDraftData.data);
+                  }
+                  //console.log('ocrDraftData allHeroes.allyheroes '+ this.allHeroes.allyHeroes);
+                }
+                else{
+                  if (ocrDraftData.data>0){
+                    this.allHeroes.enemyHeroes.splice(heroNumber-6, 1, ocrDraftData.data);
+                  }
+                }
+              }
+              else{
+                if(heroNumber>5){
+                  if (ocrDraftData.data>0){
+                    this.allHeroes.allyHeroes.splice(heroNumber-6, 1, ocrDraftData.data);
+                  }
+                }
+                else{
+                  if (ocrDraftData.data>0){
+                    this.allHeroes.enemyHeroes.splice(heroNumber-1, 1, ocrDraftData.data);
+                  }  
+                }
+              }        
+          }
+          console.log('ocrDraftData allHeroes '+ JSON.stringify(this.allHeroes));
+        },
+        putHeroesId(heroNumber, heroID, side){
+          if (side=="enemy") this.allHeroes.enemyHeroes.splice(heroNumber-1, 1, heroID);
+          else if (side=="ally") this.allHeroes.allyHeroes.splice(heroNumber-1, 1, heroID);
+          console.log('putHeroesId allHeroes '+ JSON.stringify(this.allHeroes));
+        },
+        clearHeroesIdAll(side){
+          if (side=="enemy") this.allHeroes.enemyHeroes = [0,0,0,0,0];
+          else if (side=="ally") this.allHeroes.allyHeroes = [0,0,0,0,0];
+          console.log('clearHeroesIdAll allHeroes '+ JSON.stringify(this.allHeroes));
+        },
         clearAllAllyState(){
           setTimeout(() => {
             console.log("allyHero1= " + JSON.stringify(this.allyHero1.heroStats.matchUp[0].with[0]));
