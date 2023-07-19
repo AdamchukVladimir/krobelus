@@ -91,6 +91,7 @@ export const useRecomendationStore = defineStore('RecomendationStore', {
       getHeroId: (state) => (heroNumber,side) => {
         return state.allHeroes[side][heroNumber-1];
       },
+      getAllHeroes: (state) => state.allHeroes,
     },
     actions: {
           async getDraftOCR(){
@@ -156,13 +157,13 @@ export const useRecomendationStore = defineStore('RecomendationStore', {
         },
         clearOneAllyState(idAlly){
           setTimeout(() => {
-            console.log("allyHero1= " + JSON.stringify(this.allyHero1.heroStats.matchUp[0].with[0]));
+            console.log("allyHero clear= "+idAlly+" ");
             if (idAlly==1)      this.allyHero1 = false;
             else if (idAlly==2) this.allyHero2 = false;
             else if (idAlly==3) this.allyHero3 = false;
             else if (idAlly==4) this.allyHero4 = false;
             else if (idAlly==5) this.allyHero5 = false;
-            console.log("allyHero1= " + this.allyHero1);
+            console.log("allyHero clear= "+ idAlly +" " + this.allyHero1);
         }, "1000");
         },
         clearAllVersusState(){
@@ -176,151 +177,169 @@ export const useRecomendationStore = defineStore('RecomendationStore', {
         },
         clearOneVersusState(idVersus){
           setTimeout(() => {
+            console.log("idVersus clear = "+idVersus+" ");
             if (idVersus==1)      this.versusHero1 = false;
             else if (idVersus==2) this.versusHero2 = false;
             else if (idVersus==3) this.versusHero3 = false;
             else if (idVersus==4) this.versusHero4 = false;
             else if (idVersus==5) this.versusHero5 = false;
+            console.log("idVersus clear = "+idVersus+ " " + this.versusHero1);
         }, "1000");
         },
         getAlly1(id){
-          console.log("id= " + id);
-          
-          //let week = 1679165814;
-          let week = parseInt(new Date().getTime()/1000);
-          console.log("week= " + parseInt(new Date().getTime()/1000));
-          const { result: resultAlly1, variables: variablesAlly1 } = useQuery(VERSUS_QUERY,{});
-          variablesAlly1.value = {
-            id,
-            week,
-          };
-          
-          setTimeout(() => {
-            this.allyHero1 = resultAlly1._rawValue;
-            console.log("allyHero1= " + JSON.stringify(this.allyHero1.heroStats.matchUp[0].with[0]));
-          }, "2000");
-           
+          console.log("getAlly1= " + id);
+          if(id>0){
+            //let week = 1679165814;
+            let week = parseInt(new Date().getTime()/1000);
+            console.log("week= " + parseInt(new Date().getTime()/1000));
+            const { result: resultAlly1, variables: variablesAlly1 } = useQuery(VERSUS_QUERY,{});
+            variablesAlly1.value = {
+              id,
+              week,
+            };
+            
+            setTimeout(() => {
+              this.allyHero1 = resultAlly1._rawValue;
+              console.log("allyHero1= " + JSON.stringify(this.allyHero1.heroStats.matchUp[0].with[0]));
+            }, "2000");
+          } 
         },
         getAlly2(id){
           console.log("id ally= " + id);
-          let week = parseInt(new Date().getTime()/1000);
-          console.log("week ally= " + parseInt(new Date().getTime()/1000));
-          const { result: resultAlly2, variables: variablesAlly2 } = useQuery(VERSUS_QUERY,{});
-          variablesAlly2.value = {
-            id,
-            week,
-          };
-          setTimeout(() => {
-            this.allyHero2 = resultAlly2._rawValue;
-          }, "2000"); 
+          if(id>0){
+            let week = parseInt(new Date().getTime()/1000);
+            console.log("week ally= " + parseInt(new Date().getTime()/1000));
+            const { result: resultAlly2, variables: variablesAlly2 } = useQuery(VERSUS_QUERY,{});
+            variablesAlly2.value = {
+              id,
+              week,
+            };
+            setTimeout(() => {
+              this.allyHero2 = resultAlly2._rawValue;
+            }, "2000"); 
+          }
         },
         getAlly3(id){
           console.log("id3 ally= " + id);
-          let week = parseInt(new Date().getTime()/1000);
-          console.log("week3 ally= " + parseInt(new Date().getTime()/1000));
-          const { result: resultAlly3, variables: variablesAlly3 } = useQuery(VERSUS_QUERY,{});
-          variablesAlly3.value = {
-            id,
-            week,
-          };
-          setTimeout(() => {
-            this.allyHero3 = resultAlly3._rawValue;
-          }, "2000"); 
+          if(id>0){
+            let week = parseInt(new Date().getTime()/1000);
+            console.log("week3 ally= " + parseInt(new Date().getTime()/1000));
+            const { result: resultAlly3, variables: variablesAlly3 } = useQuery(VERSUS_QUERY,{});
+            variablesAlly3.value = {
+              id,
+              week,
+            };
+            setTimeout(() => {
+              this.allyHero3 = resultAlly3._rawValue;
+            }, "2000"); 
+          }
         },
         getAlly4(id){
           console.log("id4 ally= " + id);
-          let week = parseInt(new Date().getTime()/1000);
-          console.log("week4 ally= " + parseInt(new Date().getTime()/1000));
-          const { result: resultAlly4, variables: variablesAlly4 } = useQuery(VERSUS_QUERY,{});
-          variablesAlly4.value = {
-            id,
-            week,
-          };
-          setTimeout(() => {
-            this.allyHero4 = resultAlly4._rawValue;
-          }, "2000"); 
+          if(id>0){
+            let week = parseInt(new Date().getTime()/1000);
+            console.log("week4 ally= " + parseInt(new Date().getTime()/1000));
+            const { result: resultAlly4, variables: variablesAlly4 } = useQuery(VERSUS_QUERY,{});
+            variablesAlly4.value = {
+              id,
+              week,
+            };
+            setTimeout(() => {
+              this.allyHero4 = resultAlly4._rawValue;
+            }, "2000"); 
+          }
         },
         getAlly5(id){
           console.log("id5 ally= " + id);
-          let week = parseInt(new Date().getTime()/1000);
-          console.log("week5 ally= " + parseInt(new Date().getTime()/1000));
-          const { result: resultAlly5, variables: variablesAlly5 } = useQuery(VERSUS_QUERY,{});
-          variablesAlly5.value = {
-            id,
-            week,
-          };
-          setTimeout(() => {
-            this.allyHero5 = resultAlly5._rawValue;
-          }, "2000"); 
+          if(id>0){
+            let week = parseInt(new Date().getTime()/1000);
+            console.log("week5 ally= " + parseInt(new Date().getTime()/1000));
+            const { result: resultAlly5, variables: variablesAlly5 } = useQuery(VERSUS_QUERY,{});
+            variablesAlly5.value = {
+              id,
+              week,
+            };
+            setTimeout(() => {
+              this.allyHero5 = resultAlly5._rawValue;
+            }, "2000"); 
+          }
         },
         getVersus1(id){
-          console.log("id= " + id);
-          
-          //let week = 1679165814;
-          let week = parseInt(new Date().getTime()/1000);
-          console.log("week= " + parseInt(new Date().getTime()/1000));
-          const { result: resultVersus1, variables: variablesVersus1 } = useQuery(VERSUS_QUERY,{});
-          variablesVersus1.value = {
-            id,
-            week,
-          };
-          
-          setTimeout(() => {
-            this.versusHero1 = resultVersus1._rawValue;
-          }, "2000");
-           
+          console.log("getVersus1 id= " + id);
+          if(id>0){
+            //let week = 1679165814;
+            let week = parseInt(new Date().getTime()/1000);
+            console.log("week= " + parseInt(new Date().getTime()/1000));
+            const { result: resultVersus1, variables: variablesVersus1 } = useQuery(VERSUS_QUERY,{});
+            variablesVersus1.value = {
+              id,
+              week,
+            };
+            
+            setTimeout(() => {
+              this.versusHero1 = resultVersus1._rawValue;
+            }, "2000");
+          } 
         },
         getVersus2(id){
-          console.log("id= " + id);
-          let week = parseInt(new Date().getTime()/1000);
-          const { result: resultVersus2, variables: variablesVersus2 } = useQuery(VERSUS_QUERY,{});
-          variablesVersus2.value = {
-            id,
-            week,
-          };
-          setTimeout(() => {
-            this.versusHero2 = resultVersus2._rawValue;
-            console.log("resultVersus2 " + JSON.stringify(this.versusHero2.heroStats.matchUp[0].vs[0]));
-          }, "2000");
+          if(id>0){
+            console.log("id= " + id);
+            let week = parseInt(new Date().getTime()/1000);
+            const { result: resultVersus2, variables: variablesVersus2 } = useQuery(VERSUS_QUERY,{});
+            variablesVersus2.value = {
+              id,
+              week,
+            };
+            setTimeout(() => {
+              this.versusHero2 = resultVersus2._rawValue;
+              console.log("resultVersus2 " + JSON.stringify(this.versusHero2.heroStats.matchUp[0].vs[0]));
+            }, "2000");
+          }
         },
         getVersus3(id){
           console.log("id= " + id);
-          let week = parseInt(new Date().getTime()/1000);
-          const { result: resultVersus3, variables: variablesVersus3 } = useQuery(VERSUS_QUERY,{});
-          variablesVersus3.value = {
-            id,
-            week,
-          };
-          setTimeout(() => {
-            this.versusHero3 = resultVersus3._rawValue;
-            console.log("resultVersus3 " + JSON.stringify(this.versusHero3.heroStats.matchUp[0].vs[0]));
-          }, "2000");
+          if(id>0){
+            let week = parseInt(new Date().getTime()/1000);
+            const { result: resultVersus3, variables: variablesVersus3 } = useQuery(VERSUS_QUERY,{});
+            variablesVersus3.value = {
+              id,
+              week,
+            };
+            setTimeout(() => {
+              this.versusHero3 = resultVersus3._rawValue;
+              console.log("resultVersus3 " + JSON.stringify(this.versusHero3.heroStats.matchUp[0].vs[0]));
+            }, "2000");
+          }
         },
         getVersus4(id){
           console.log("id= " + id);
-          let week = parseInt(new Date().getTime()/1000);
-          const { result: resultVersus4, variables: variablesVersus4 } = useQuery(VERSUS_QUERY,{});
-          variablesVersus4.value = {
-            id,
-            week,
-          };
-          setTimeout(() => {
-            this.versusHero4 = resultVersus4._rawValue;
-            console.log("resultVersus4 " + JSON.stringify(this.versusHero4.heroStats.matchUp[0].vs[0]));
-          }, "2000");
+          if(id>0){
+            let week = parseInt(new Date().getTime()/1000);
+            const { result: resultVersus4, variables: variablesVersus4 } = useQuery(VERSUS_QUERY,{});
+            variablesVersus4.value = {
+              id,
+              week,
+            };
+            setTimeout(() => {
+              this.versusHero4 = resultVersus4._rawValue;
+              console.log("resultVersus4 " + JSON.stringify(this.versusHero4.heroStats.matchUp[0].vs[0]));
+            }, "2000");
+          }
         },
         getVersus5(id){
           console.log("id= " + id);
-          let week = parseInt(new Date().getTime()/1000);
-          const { result: resultVersus5, variables: variablesVersus5 } = useQuery(VERSUS_QUERY,{});
-          variablesVersus5.value = {
-            id,
-            week,
-          };
-          setTimeout(() => {
-            this.versusHero5 = resultVersus5._rawValue;
-            console.log("resultVersus5 " + JSON.stringify(this.versusHero5.heroStats.matchUp[0].vs[0]));
-          }, "2000");
+          if(id>0){
+            let week = parseInt(new Date().getTime()/1000);
+            const { result: resultVersus5, variables: variablesVersus5 } = useQuery(VERSUS_QUERY,{});
+            variablesVersus5.value = {
+              id,
+              week,
+            };
+            setTimeout(() => {
+              this.versusHero5 = resultVersus5._rawValue;
+              console.log("resultVersus5 " + JSON.stringify(this.versusHero5.heroStats.matchUp[0].vs[0]));
+            }, "2000");
+          }
         },                                
     }
 });

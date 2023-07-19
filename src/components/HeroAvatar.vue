@@ -12,6 +12,7 @@
 
 import { useStore, mapActions, mapState } from "pinia";
 import { useUsersStore } from "@/store/usersStore";
+import { useRecomendationStore } from "@/store/recomendationStore";
 import { ref, watch } from "vue";
 export default {
   props: {
@@ -47,15 +48,23 @@ export default {
   },
   computed: {
     ...mapState(useUsersStore, { userTop10HeroesStore: "userTop10Heroes" }),
+    ...mapState(useRecomendationStore, {
+      getAllHeroesStore: "getAllHeroes",
+    }),
     getClass() {
       console.log("getClass " + this.favClass);
       let isFave = "";
+      let pickedHeroes = [
+        ...this.getAllHeroesStore.allyHeroes,
+        ...this.getAllHeroesStore.enemyHeroes,
+      ];
       console.log("this.userTop10HeroesStore 53 " + this.userTop10HeroesStore);
+      console.log("pickedHeroes " + pickedHeroes);
+      console.log("this.heroObj.imgId 53 " + this.heroObj.imgId);
       console.log(
         "this.userTop10HeroesStore.length 53 " +
           this.userTop10HeroesStore.length
       );
-      console.log("this.heroObj.imgId 53 " + this.heroObj.imgId);
       for (let j = 0; j < this.userTop10HeroesStore.length; j++) {
         console.log(
           "this.userTop10HeroesStore 53 j " + this.userTop10HeroesStore[j].id
@@ -79,6 +88,9 @@ export default {
     console.log(
       "mounted userTop10HeroesStore " +
         JSON.stringify(this.userTop10HeroesStore)
+    );
+    console.log(
+      "mounted getAllHeroesStore " + JSON.stringify(this.getAllHeroesStore)
     );
   },
 };

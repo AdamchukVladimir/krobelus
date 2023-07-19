@@ -120,11 +120,11 @@ export default {
       //   );
       // }, "8000");
       setTimeout(() => {
-        this.getAlly1Store(this.getHeroIdStore(1, `enemyHeroes`));
-        this.getAlly2Store(this.getHeroIdStore(2, `enemyHeroes`));
-        this.getAlly3Store(this.getHeroIdStore(3, `enemyHeroes`));
-        this.getAlly4Store(this.getHeroIdStore(4, `enemyHeroes`));
-        this.getAlly5Store(this.getHeroIdStore(5, `enemyHeroes`));
+        this.getVersus1Store(this.getHeroIdStore(1, `enemyHeroes`));
+        this.getVersus2Store(this.getHeroIdStore(2, `enemyHeroes`));
+        this.getVersus3Store(this.getHeroIdStore(3, `enemyHeroes`));
+        this.getVersus4Store(this.getHeroIdStore(4, `enemyHeroes`));
+        this.getVersus5Store(this.getHeroIdStore(5, `enemyHeroes`));
 
         this.getAlly1Store(this.getHeroIdStore(1, `allyHeroes`));
         this.getAlly2Store(this.getHeroIdStore(2, `allyHeroes`));

@@ -412,6 +412,7 @@ export default {
       getVersusHero4: "getVersusHero4",
       getVersusHero5: "getVersusHero5",
       getHeroIdStore: "getHeroId", //Получает id героя по параметрам позиции и стороны enemy/ally
+      getAllHeroesStore: "getAllHeroes", //получает всех выбранных героев
       getTestStore: "getTestStore",
     }),
 
@@ -496,6 +497,9 @@ export default {
         if (aVersusheroes[k] == false) {
           console.log("oMainResultVersus  " + (k + 1) + aVersusheroes[k]);
         } else {
+          console.log(
+            "oMainResultVersus1  " + (k + 1) + JSON.stringify(aVersusheroes[k])
+          );
           for (
             let p = 0;
             p < aVersusheroes[k].heroStats.matchUp[0].vs.length;
@@ -528,6 +532,9 @@ export default {
         if (aAllyheroes[z] == false) {
           console.log("oMainResultAlly  " + (z + 1) + aAllyheroes[z]);
         } else {
+          console.log(
+            "oMainResultAlly1 " + (z + 1) + JSON.stringify(aAllyheroes[z])
+          );
           for (
             let x = 0;
             x < aAllyheroes[z].heroStats.matchUp[0].with.length;
@@ -702,7 +709,17 @@ export default {
       };
       if (this.result) {
         for (let i = 0; i < this.result.constants.heroes.length; i++) {
-          console.log("mainResult ");
+          let activityToggle = "active";
+          let pickedHeroes = [
+            ...this.getAllHeroesStore.allyHeroes,
+            ...this.getAllHeroesStore.enemyHeroes,
+          ];
+          if (pickedHeroes.includes(this.result.constants.heroes[i].id)) {
+            console.log("903 mainResultCircle");
+            activityToggle = "inactive"; //Функция устанавливает активно/неактивно если герой выбран
+          }
+
+          console.log("mainResult 711");
           oMainResult.heroes.push({
             id: this.result.constants.heroes[i].id,
             primaryAttribute:
@@ -714,7 +731,8 @@ export default {
             roleId: this.result.constants.heroes[i].roles.roleId,
             roleLevel: this.result.constants.heroes[i].roles.level,
             imgId: this.result.constants.heroes[i].id,
-            activity: "active",
+            //activity: "active",
+            activity: activityToggle,
           });
         }
       }
@@ -864,11 +882,25 @@ export default {
       }
     },
     mainResultCicle(avatarObj) {
-      for (let i = 0; i < this.mainResult.heroes.length; i++) {
-        if (this.mainResult.heroes[i].id == avatarObj.id) {
-          this.mainResult.heroes[i].activity = "inactive";
-        }
-      }
+      //Переводит в неактивное состояние выбранных героев
+      let pickedHeroes = [
+        ...this.getAllHeroesStore.allyHeroes,
+        ...this.getAllHeroesStore.enemyHeroes,
+      ];
+
+      // for (let i = 0; i < this.mainResult.heroes.length; i++) {
+      //   // if (this.mainResult.heroes[i].id == avatarObj.id) {
+      //   //   this.mainResult.heroes[i].activity = "inactive";
+      //   // }
+      //   console.log("901 mainResultCircle" + avatarObj.id + " " + pickedHeroes);
+      //   if (pickedHeroes.includes(this.mainResult.heroes[i].id)) {
+      //     console.log("903 mainResultCircle");
+      //     this.mainResult.heroes[i].activity = "inactive";
+      //   }
+      //   console.log(
+      //     "906 mainResultCircle " + this.mainResult.heroes[i].activity
+      //   );
+      // }
     },
 
     //Добавляет текущему пользователю белую рамку
