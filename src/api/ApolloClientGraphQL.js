@@ -1,29 +1,28 @@
-import { createApp, provide, h } from 'vue'
-import { DefaultApolloClient } from '@vue/apollo-composable'
-import { HttpLink } from 'apollo-link-http'
-import { ApolloClient, InMemoryCache } from '@apollo/client/core'
-import { ApolloLink } from 'apollo-link'
-import { Cookies } from 'js-cookie'
+import { createApp, provide, h } from "vue";
+import { DefaultApolloClient } from "@vue/apollo-composable";
+import { HttpLink } from "apollo-link-http";
+import { ApolloClient, InMemoryCache } from "@apollo/client/core";
+import { ApolloLink } from "apollo-link";
+import { Cookies } from "js-cookie";
 
 //Клиент для подключения к graphql
-const cache = new InMemoryCache()
-const httpLink = new HttpLink({ uri: 'https://api.stratz.com/graphql' });
+const cache = new InMemoryCache();
+const httpLink = new HttpLink({ uri: "https://api.stratz.com/graphql" });
 const authMiddleware = new ApolloLink((operation, forward) => {
+	const token =
+		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdWJqZWN0IjoiYWU4MDk5YmEtNTUzMy00NmUxLWI5ZDEtNWQyOWU4YjYxZjJkIiwiU3RlYW1JZCI6IjI0Mzk5NTE2NyIsIm5iZiI6MTcyMjg4Njk1MCwiZXhwIjoxNzU0NDIyOTUwLCJpYXQiOjE3MjI4ODY5NTAsImlzcyI6Imh0dHBzOi8vYXBpLnN0cmF0ei5jb20ifQ.p1XjSQjIjOuvXWPx_Dh67sHi6MJF8OM4Jfr5Edzg03U";
+	operation.setContext({
+		headers: {
+			authorization: token ? `Bearer ${token}` : null,
+		},
+	});
 
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJodHRwczovL3N0ZWFtY29tbXVuaXR5LmNvbS9vcGVuaWQvaWQvNzY1NjExOTgyMDQyNjA4OTUiLCJ1bmlxdWVfbmFtZSI6ImludGVybmV0IG1vbmV58J-mhyIsIlN1YmplY3QiOiJhZTgwOTliYS01NTMzLTQ2ZTEtYjlkMS01ZDI5ZThiNjFmMmQiLCJTdGVhbUlkIjoiMjQzOTk1MTY3IiwibmJmIjoxNjcxNzMzMzQ5LCJleHAiOjE3MDMyNjkzNDksImlhdCI6MTY3MTczMzM0OSwiaXNzIjoiaHR0cHM6Ly9hcGkuc3RyYXR6LmNvbSJ9.APCr9Bvf0fj9NPUclA8FfRDS--ZVfFeYol0YwNiE5Y4'
+	return forward(operation);
+});
 
-  operation.setContext({
-    headers: {
-      authorization: token ? `Bearer ${token}` : null
-    }
-  })
-
-  return forward(operation)
-})
-
-const apolloClient = new ApolloClient({  
-  link: authMiddleware.concat(httpLink),
-  cache,
-})
+const apolloClient = new ApolloClient({
+	link: authMiddleware.concat(httpLink),
+	cache,
+});
 
 export default apolloClient;
